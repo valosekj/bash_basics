@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Function for execution certain command
+# USAGE:
+#   exe "command" [option]
+# OPTIONS:
+#   [no option] - verbose mode ON (print output to both terminal and to log)
+#   v - turn OFF verbose (only see which command is executed but all its output is redirected to log)
+
+# IMPORTANT: This funtion collaborates and deppends on show function
+
+# Jan Valosek, fMRI laboratory, Olomouc, 2019-2020. Inspired by Pavel Hok
+# VER=22-12-2019
+
+export PATH=$PATH:/md1/ing/bin/bash_basics
+
+# Check if dependecy on show function is fullfiled
+if [[ $(which show) == " " ]]; then
+    echo -e "Function show was not found. Add path to it to \$PATH variable.\nExiting..."
+    exit
+fi
+
+show "Executing: $1"            # Print informative messeage which command is executed to terminal
+$1 | show --stdin $2            # Run command and Redirect output of the command to log (v option) or to terminal (without v option)
+
+lasterr=${PIPESTATUS[0]}                # get last error
+if [[ $lasterr != 0 ]]; then
+        show "Sub-process returned error value $lasterr" e
+fi

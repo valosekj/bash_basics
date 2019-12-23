@@ -1,0 +1,82 @@
+#!/bin/bash
+
+# Function for printing messeage or command's output in various ways
+# USAGE:
+#    show.sh "messeage" [option]
+# OPTIONS:
+#       [no option] - verbose mode on (print output to both terminal and to log)
+#       v - turn off verbose (print messeage only to log)
+#       e - error (print messeage in red color to both terminal and log and exit)
+#       w - warning (print messeage in red color to both terminal and log but stil continue)
+#       y - print standard messeage in yellow color
+#       g - print standard messeage in green color
+
+# IMPORTANT: This funtion collaborates with exe function
+
+# Jan Valosek, fMRI laboratory, Olomouc, 2019-2020. Inspired by Pavel Hok
+# VER=22-12-2019
+
+# Colors definition
+red=`tput setaf 1`
+yellow=`tput setaf 3`
+green=`tput setaf 6`
+normal=$(tput sgr0)
+
+
+# ERROR - print messeage in red color to both terminal and log with time stamp and exit
+if [[ $2 =~ "e" ]]; then
+
+        echo -e "${red}$(date "+%T_%Y-%m-%d"): ERROR: $1\nExiting...${normal}" 1>&2
+        exit
+
+# WARNING - print messeage in red color to both terminal and log  with time stamp but stil continue
+elif [[ $2 =~ "w" ]]; then
+
+        echo -e "${red}$(date "+%T_%Y-%m-%d"): WARNING: $1\nContinuing...${normal}" 1>&2
+
+# Standard messeage in yellow color to both terminal and log with time stamp
+elif [[ $2 =~ "y" ]]; then
+
+        echo -e "${yellow}$(date "+%T_%Y-%m-%d"): $1${normal}" 1>&2
+
+# Standard messeage in green color to both terminal and log with time stamp
+elif [[ $2 =~ "g" ]]; then
+
+        echo -e "${green}$(date "+%T_%Y-%m-%d"): $1${normal}" 1>&2
+
+# NO OPTION - output from command or message to screen and to log (= verbose mode) without time stamp
+elif [[ ! ( $2 =~ "v" ) ]]; then
+
+        # Messeage
+        if [[ "$1" != "--stdin" ]]; then
+                echo -e "$1"
+        # Command
+        else
+            while read line; do
+                    echo -e "$line"
+            done
+        fi
+
+# TURN OFF verbose - output from command or messeage only to log
+elif [[ $2 =~ "v" ]]; then
+
+    if [[ $LOGPATH == "" ]]; then
+        echo -e "Path to log is empty. Fix it (e.g. by setting LOGPATH variable as global in your script (export \$LOGPATH=\"log.txt\")).\nExiting..."
+        exit
+    fi
+
+        # Messeage
+        if [[ "$1" != "--stdin" ]]; then
+                echo -e "$1" >> $LOGPATH
+        # Command
+        else
+                while read line; do
+                        echo -e "$line" >> $LOGPATH
+                done
+        fi
+
+#    elif [[ "$1" = "--stdin" ]]; then
+#            while read line; do
+#                    echo -e $line >/dev/null
+#            done
+fi

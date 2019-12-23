@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# Function for checking existency of directories or files
+# USAGE:
+#   check_input.sh <argument> "DIR_NAME(s) or FILE_NAME(s)"
+# ARGUMENTS:
+#   d - check if directory exists
+#   dc - check if directory exists, if not create it
+#   f - check if file exists
+
+# Jan Valosek, fMRI laboratory, Olomouc, 2019-2020. Inspired by Pavel Hok
+# VER=21-12-2019
+
+flag="$1"
+shift
+
+if [[ $flag =~ "h" ]] || [[ $flag == "" ]]; then
+  echo -e "Help for function for checking existency of directories or files.\nUSAGE:\n\tcheck_input <argument> DIR_NAME(s) or FILE_NAME(s)"
+  exit
+fi
+
+
+while [[ "$1" != "" ]]; do
+  case $flag in
+    # Check if directory exists
+    d)
+        if [[ ! -d "$1" ]]; then
+          echo "Directory $1 does not exist."
+          exit
+        fi
+        ;;
+    # Check if directory exists, if not create it
+    dc)
+        if [[ ! -d "$1" ]]; then
+          echo "Creating $1 directory."
+          mkdir $1
+          if [[ ! -d "$1" ]]; then
+            echo "Directory $1 could not be created."
+            exit
+          fi
+        fi
+        ;;
+    # Check if file exists
+    f)
+        if [[ ! -f "$1" ]]; then
+          echo "File $1 does not exist."
+          exit
+        fi
+        ;;
+  esac
+  shift
+done
