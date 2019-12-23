@@ -23,7 +23,8 @@ fi
 show "Executing: $1"            # Print informative messeage which command is executed to terminal
 $1 | show --stdin $2            # Run command and Redirect output of the command to log (v option) or to terminal (without v option)
 
+# Check if command finished with error, if so, call function show with error argument (see help of function show)
 lasterr=${PIPESTATUS[0]}                # get last error
 if [[ $lasterr != 0 ]]; then
-        show "Sub-process returned error value $lasterr" e
+    show "Sub-process returned error value $lasterr" e
 fi
