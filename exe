@@ -13,7 +13,7 @@
 # VER=22-12-2019
 
 #export PATH=$PATH:/md1/ing/bin/bash_basics
-/md1/ing/bin/bash_basics/config_bash.sh 
+source /md1/ing/bin/bash_basics/config_bash.sh 
 
 # Check if dependecy on show function is fullfiled
 if [[ $(which show) == " " ]]; then
