@@ -26,7 +26,7 @@ while [[ "$1" != "" ]]; do
     d)
         if [[ ! -d "$1" ]]; then
           echo "Directory $1 does not exist."
-          exit
+          exit 1
         fi
         ;;
     # Check if directory exists, if not create it
@@ -36,7 +36,7 @@ while [[ "$1" != "" ]]; do
           mkdir $1
           if [[ ! -d "$1" ]]; then
             echo "Directory $1 could not be created."
-            exit
+            exit 1
           fi
         fi
         ;;
@@ -44,7 +44,7 @@ while [[ "$1" != "" ]]; do
     f)
         if [[ ! -f "$1" ]]; then
           echo "File $1 does not exist."
-          exit
+          exit 1
         fi
         ;;
   esac
