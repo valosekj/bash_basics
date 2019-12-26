@@ -12,7 +12,8 @@
 # Jan Valosek, fMRI laboratory, Olomouc, 2019-2020. Inspired by Pavel Hok
 # VER=22-12-2019
 
-export PATH=$PATH:/md1/ing/bin/bash_basics
+#export PATH=$PATH:/md1/ing/bin/bash_basics
+/md1/ing/bin/bash_basics/config_bash.sh 
 
 # Check if dependecy on show function is fullfiled
 if [[ $(which show) == " " ]]; then
