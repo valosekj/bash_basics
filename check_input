@@ -7,6 +7,7 @@
 #   d - check if directory exists
 #   dc - check if directory exists, if not create it
 #   f - check if file exists
+#   e - check if binary exist and is executable
 
 # Jan Valosek, fMRI laboratory, Olomouc, 2019-2020. Inspired by Pavel Hok
 # VER=27-12-2019
@@ -15,7 +16,7 @@ flag="$1"
 shift
 
 if [[ $flag =~ "h" ]] || [[ $flag == "" ]]; then
-  echo -e "Help for function for checking existency of directories or files.\nUSAGE:\n\tcheck_input <argument> DIR_NAME(s) or FILE_NAME(s)"
+  echo -e "Help for function for checking existency of directories or files.\nUSAGE:\n\tcheck_input <argument> DIR_NAME(s) or FILE_NAME(s) or SCRIPT_NAME(s)"
   exit
 fi
 
@@ -59,6 +60,13 @@ while [[ "$1" != "" ]]; do
     f)
         if [[ ! -f "$1" ]]; then
           echo "File $1 does not exist."
+          trap_exit
+        fi
+        ;;
+    # Check if binary file exist and is executable
+    e)
+        if [[ ! -x "$1" ]]; then
+          echo "Binary file/Fuction $1 does not exist or is not executable."
           trap_exit
         fi
         ;;
