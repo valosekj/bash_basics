@@ -19,6 +19,17 @@ if [[ $flag =~ "h" ]] || [[ $flag == "" ]]; then
   exit
 fi
 
+trap_exit()
+{
+    OS_name=$(uname -a | awk '{print $1}')  # get OS name (Darwin or Linux)
+
+    if [[ $OS_name == "Linux" ]]; then
+        kill -SIGUSR1 `ps --pid $$ -o ppid`;exit
+    elif [[ $OS_name == "Darwin" ]]; then
+        kill -SIGUSR1 `ps $$ -o ppid`;exit
+    fi
+}
+
 
 while [[ "$1" != "" ]]; do
   case $flag in
@@ -44,7 +55,7 @@ while [[ "$1" != "" ]]; do
     f)
         if [[ ! -f "$1" ]]; then
           echo "File $1 does not exist."
-          exit 1
+          trap_exit
         fi
         ;;
   esac
