@@ -10,15 +10,31 @@
 # IMPORTANT: This funtion collaborates and deppends on show function
 
 # Jan Valosek, fMRI laboratory, Olomouc, 2019-2020. Inspired by Pavel Hok
-# VER=22-12-2019
+# VER=27-12-2019
 
 #export PATH=$PATH:/md1/ing/bin/bash_basics
-source /md1/ing/bin/bash_basics/config_bash.sh 
+source /md1/ing/bin/bash_basics/config_bash.sh
+
+# Function telling to parent process that something happened (e.g. file does not exist)
+# Function finds parent process ID (ppid) and set user defined signal (SIGUSR1)
+# Inspiration:
+#     https://stackoverflow.com/questions/16215196/bash-exit-parent-script-from-child-script
+trap_exit()
+{
+    OS_name=$(uname -a | awk '{print $1}')  # get OS name (Darwin or Linux)
+
+    if [[ $OS_name == "Linux" ]]; then
+        kill -SIGUSR1 `ps --pid $$ -o ppid=`;exit   # Find parent process ID (ppid) and set user defined signal (SIGUSR1)
+    elif [[ $OS_name == "Darwin" ]]; then
+        kill -SIGUSR1 `ps $$ -o ppid=`;exit         # Find parent process ID (ppid) and set user defined signal (SIGUSR1)
+    fi
+}
+
 
 # Check if dependecy on show function is fullfiled
 if [[ $(which show) == " " ]]; then
     echo -e "Function show was not found. Add path to it to \$PATH variable.\nExiting..."
-    exit
+    trap_exit
 fi
 
 show "Executing: $1"            # Print informative messeage which command is executed to terminal

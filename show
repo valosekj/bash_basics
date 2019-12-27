@@ -14,7 +14,7 @@
 # IMPORTANT: This funtion collaborates with exe function
 
 # Jan Valosek, fMRI laboratory, Olomouc, 2019-2020. Inspired by Pavel Hok
-# VER=22-12-2019
+# VER=27-12-2019
 
 # Colors definition
 red=`tput setaf 1`
@@ -23,11 +23,26 @@ green=`tput setaf 6`
 normal=$(tput sgr0)
 
 
+# Function telling to parent process that something happened (e.g. file does not exist)
+# Function finds parent process ID (ppid) and set user defined signal (SIGUSR1)
+# Inspiration:
+#     https://stackoverflow.com/questions/16215196/bash-exit-parent-script-from-child-script
+trap_exit()
+{
+    OS_name=$(uname -a | awk '{print $1}')  # get OS name (Darwin or Linux)
+
+    if [[ $OS_name == "Linux" ]]; then
+        kill -SIGUSR1 `ps --pid $$ -o ppid=`;exit   # Find parent process ID (ppid) and set user defined signal (SIGUSR1)
+    elif [[ $OS_name == "Darwin" ]]; then
+        kill -SIGUSR1 `ps $$ -o ppid=`;exit         # Find parent process ID (ppid) and set user defined signal (SIGUSR1)
+    fi
+}
+
 # ERROR - print messeage in red color to both terminal and log with time stamp and exit
 if [[ $2 =~ "e" ]]; then
 
         echo -e "${red}$(date "+%T_%Y-%m-%d"): ERROR: $1\nExiting...${normal}" 1>&2
-        exit
+        trap_exit
 
 # WARNING - print messeage in red color to both terminal and log  with time stamp but stil continue
 elif [[ $2 =~ "w" ]]; then
@@ -62,7 +77,7 @@ elif [[ $2 =~ "v" ]]; then
 
     if [[ $LOGPATH == "" ]]; then
         echo -e "Path to log is empty. Fix it (e.g. by setting LOGPATH variable as global in your script (export \$LOGPATH=\"log.txt\")).\nExiting..."
-        exit
+        trap_exit
     fi
 
         # Messeage
