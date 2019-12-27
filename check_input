@@ -67,9 +67,10 @@ while [[ "$1" != "" ]]; do
     e)
         if [[ ! -x "$1" ]]; then
             if [[ ! -f "$1" ]]; then
-                echo "Function/Script $1 does not exist"
+                echo "Function/Script $1 does not exist."
                 trap_exit
             else
+                echo "Setting permissions for $1 script/function."
                 chmod 770 $1
                 if [[ ! -x "$1" ]]; then
                     echo "Fuction/Script $1 is not executable and permissions can not be set."
