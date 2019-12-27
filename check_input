@@ -63,11 +63,19 @@ while [[ "$1" != "" ]]; do
           trap_exit
         fi
         ;;
-    # Check if binary file exist and is executable
+    # Check if script/function exists and is executable, if not, set permissions (to 770)
     e)
         if [[ ! -x "$1" ]]; then
-          echo "Binary file/Fuction $1 does not exist or is not executable."
-          trap_exit
+            if [[ ! -f "$1" ]]; then
+                echo "Function/Script $1 does not exist"
+                trap_exit
+            else
+                chmod 770 $1
+                if [[ ! -x "$1" ]]; then
+                    echo "Fuction/Script $1 is not executable and permissions can not be set."
+                    trap_exit
+                fi
+            fi
         fi
         ;;
   esac
