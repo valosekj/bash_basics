@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Function for execution certain command
+# Function for execution certain command and prints its output to log
 # USAGE:
 #   exe "command" [option]
 # OPTIONS:
