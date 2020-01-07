@@ -11,4 +11,5 @@ Scripts:
  
  
  Contact: Jan Valosek, fMRI laboratory, Olomouc
+ 
  2019-2020
