@@ -4,7 +4,7 @@
 # USAGE:
 #   exe "command" [option]
 # OPTIONS:
-#   [no option] - verbose mode ON (print output to both terminal and to log)
+#   [no option] - verbose mode ON (print command' output to both terminal and to log)
 #   v - turn OFF verbose (only see which command is executed but all its output is redirected to log)
 
 # IMPORTANT: This funtion collaborates and deppends on show function
