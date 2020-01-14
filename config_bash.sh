@@ -1,9 +1,13 @@
 #!/bin/bash
 
-# Script for enviroment configuration
+# Script for enviroment configuration (set PATH and path to matlab scripts)
+
+# Run this configuration script from your script by:
+#     source /md1/ing/bin/bash_basics/config_bash.sh
+
 
 # Jan Valosek, fMRI laboratory, Olomouc, 2019-2020
-# VER=26-12-2019
+# VER=14-01-2020
 
 # Add basic bash functions into PATH variable
 export PATH=$PATH:/md1/ing/bin/bash_basics
