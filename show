@@ -4,18 +4,21 @@
 # USAGE:
 #    show "messeage" [option]
 # OPTIONS:
-#       [no option] - verbose mode on (print output to both terminal and to log)
-#       v - turn off verbose (print messeage only to log)
+#       [no option] - verbose mode on (print output to both terminal and to log with time stamp)
+#       v - turn off verbose (print messeage only to log with time stamp)
 #       e - error (print messeage in red color to both terminal and log and exit)
 #       w - warning (print messeage in red color to both terminal and log but stil continue)
 #       y - print standard messeage in yellow color
 #       g - print standard messeage in green color
 #       t - switch off time mark
 # EXAMPLE USAGE:
+#       show "Hello world"      - print "Hello world" to both terminal and log with time stamp
+#       show "Hello world" t    - print "Hello world" to both terminal and log without time stamp
 #       show "Hello world" g    - print "Hello world" in green color to both terminal and log with time stamp
 #       show "Hello world" gt   - print "Hello world" in green color to both terminal and log without time stamp
 #       show "Hello world" v    - print "Hello world" only to log (verbose off) with time stamp
-#       show "Hello world" vt    - print "Hello world" only to log (verbose off) without time stamp
+#       show "Hello world" vt   - print "Hello world" only to log (verbose off) without time stamp
+#       show "Hello world" e    - print "Hello world" as error in red color to both terminal and log and exit main script
 
 # IMPORTANT: This funtion collaborates with exe function
 
