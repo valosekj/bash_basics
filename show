@@ -7,7 +7,7 @@
 #       [no option] - verbose mode on (print output to both terminal and to log with time stamp)
 #       v - turn off verbose (print messeage only to log with time stamp)
 #       e - error (print messeage in red color to both terminal and log and exit)
-#       w - warning (print messeage in red color to both terminal and log but stil continue)
+#       w - warning (print messeage in blue color to both terminal and log but stil continue)
 #       y - print standard messeage in yellow color
 #       g - print standard messeage in green color
 #       t - switch off time mark
@@ -26,9 +26,10 @@
 # VER=27-12-2019
 
 # Colors definition
-red=`tput setaf 1`
-yellow=`tput setaf 3`
-green=`tput setaf 6`
+red=$(tput setaf 1)
+yellow=$(tput setaf 3)
+blue=$(tput setaf 4)
+green=$(tput setaf 6)
 normal=$(tput sgr0)
 
 
@@ -68,7 +69,8 @@ if [[ $2 =~ "e" ]]; then
 # WARNING - print messeage in red color to both terminal and log  with time stamp but stil continue
 elif [[ $2 =~ "w" ]]; then
 
-        echo -e "${red}${print_date}WARNING: $1\nContinuing...${normal}" 1>&2
+        #echo -e "${blue}${print_date}WARNING: $1\nContinuing...${normal}" 1>&2
+        echo -e "${blue}${print_date}WARNING: $1${normal}" 1>&2
 
 # Standard messeage in yellow color to both terminal and log with time stamp
 elif [[ $2 =~ "y" ]]; then
