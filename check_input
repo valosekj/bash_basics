@@ -7,10 +7,11 @@
 #   d - check if directory exists
 #   dc - check if directory exists, if not create it
 #   f - check if file exists
-#   e - check if binary exist and is executable
+#   b - check if binary exists (e.g. FSL, ANTS, SCT, Matlab,...)
+#   e - check if script/function exist and is executable
 
 # Jan Valosek, fMRI laboratory, Olomouc, 2019-2020. Inspired by Pavel Hok
-# VER=27-12-2019
+# VER=20-01-2020
 
 flag="$1"
 shift
@@ -60,6 +61,13 @@ while [[ "$1" != "" ]]; do
     f)
         if [[ ! -f "$1" ]]; then
           echo "File $1 does not exist."
+          trap_exit
+        fi
+        ;;
+    # Check if binary exists
+    b)
+        if [[ "$(which $1)" == "" ]]; then
+          echo "Path to $1 is wrong or $1 is not installed."
           trap_exit
         fi
         ;;
