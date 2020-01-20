@@ -21,8 +21,10 @@ if [[ $flag =~ "h" ]] || [[ $flag == "" ]]; then
   exit
 fi
 
-# Function telling to parent process that something happened (e.g. file does not exist)
+# Function telling to the parent process that something happened (e.g. file/binary/script does not exist)
 # Function finds parent process ID (ppid) and set user defined signal (SIGUSR1)
+# In the parent script has to be following line for catching SIGUSR1:
+#     trap "echo Exitting>&2;exit" SIGUSR1
 # Inspiration:
 #     https://stackoverflow.com/questions/16215196/bash-exit-parent-script-from-child-script
 trap_exit()
@@ -30,9 +32,9 @@ trap_exit()
     OS_name=$(uname -a | awk '{print $1}')  # get OS name (Darwin or Linux)
 
     if [[ $OS_name == "Linux" ]]; then
-        kill -SIGUSR1 `ps --pid $$ -o ppid=`;exit   # Find parent process ID (ppid) and set user defined signal (SIGUSR1)
+        sleep 1;kill -SIGUSR1 `ps --pid $$ -o ppid=`;exit   # Find parent process ID (ppid) and set user defined signal (SIGUSR1)
     elif [[ $OS_name == "Darwin" ]]; then
-        kill -SIGUSR1 `ps $$ -o ppid=`;exit         # Find parent process ID (ppid) and set user defined signal (SIGUSR1)
+        sleep 1;kill -SIGUSR1 `ps $$ -o ppid=`;exit         # Find parent process ID (ppid) and set user defined signal (SIGUSR1)
     fi
 }
 
