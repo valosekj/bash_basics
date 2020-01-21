@@ -99,7 +99,7 @@ elif [[ ! ( $2 =~ "v" ) ]]; then
 elif [[ $2 =~ "v" ]]; then
 
     if [[ $LOGPATH == "" ]]; then
-        echo -e "Path to log is empty. Fix it (e.g. by setting LOGPATH variable as global in your script (export \$LOGPATH=\"log.txt\")).\nExiting..."
+        echo -e "Path to log is empty. Fix it (e.g. by setting LOGPATH variable as a global in your script (export \$LOGPATH=\"log.txt\")).\nExiting..."
         trap_exit
     fi
 
