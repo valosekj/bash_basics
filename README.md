@@ -1,4 +1,4 @@
-## Informations
+## Information
 
 This is bundle of basic bash functions used in routine work.
 
