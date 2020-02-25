@@ -7,10 +7,10 @@
 
 
 # Jan Valosek, fMRI laboratory, Olomouc, 2019-2020
-# VER=14-01-2020
+# VER=25-02-2020
 
-# Add basic bash functions into PATH variable
-export PATH=$PATH:/md1/ing/bin/bash_basics
+# Fetch basic bash functions
+source /md1/ing/bin/bash_basics/bash_basic_functions.sh
 
 # Set path to matlab scripts
 export MATLAB_SCRIPT=/md1/bin/matlab_scripts/
