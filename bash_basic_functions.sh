@@ -108,9 +108,9 @@ exe()
   fi
 
   if [[ $2 =~ t ]]; then
-    show "Executing: $1" $2            # Print informative message which command is executed to terminal
+    show "Executing: $1" $2       # Print informative message which command is executed to terminal without time mark
   else
-    show "Executing: $1"            # Print informative message which command is executed to terminal
+    show "Executing: $1"          # Print informative message which command is executed to terminal with time mark
   fi
   $1 | show --stdin $2            # Run command and Redirect output of the command to log (v option) or to terminal (without v option)
 
