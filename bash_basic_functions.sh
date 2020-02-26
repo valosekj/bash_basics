@@ -81,17 +81,18 @@ check_input()
 }
 
 #########################################################################
-# Function for execution certain command and prints its output to log
+# Function for execution of certain command and prints its output to log
 # USAGE:
 #   exe "command" [option]
 # OPTIONS:
 #   [no option] - verbose mode ON (print command' output to both terminal and to log)
 #   v - turn OFF verbose (only see which command is executed but all its output is redirected to log)
+#   t - turn OFF time mark
 
 # IMPORTANT: This funtion collaborates and deppends on show function
 
 # Jan Valosek, fMRI laboratory, Olomouc, 2019-2020. Inspired by Pavel Hok
-# VER=27-12-2019
+# VER=26-02-2020
 #########################################################################
 exe()
 {
@@ -101,7 +102,16 @@ exe()
       trap_exit
   fi
 
-  show "Executing: $1"            # Print informative messeage which command is executed to terminal
+  if [[ $1 == "h" ]] || [[ $1 == "-h" ]] || [[ $1 == "--help" ]] || [[ $1 == "" ]]; then
+    echo -e "Help for function for execution of certain command and prints its output to log.\nUSAGE:\n\texe \"command_1\" [option]"
+    return
+  fi
+
+  if [[ $2 =~ t ]]; then
+    show "Executing: $1" $2            # Print informative message which command is executed to terminal
+  else
+    show "Executing: $1"            # Print informative message which command is executed to terminal
+  fi
   $1 | show --stdin $2            # Run command and Redirect output of the command to log (v option) or to terminal (without v option)
 
   # Check if command finished with error, if so, call function show with error argument (see help of function show)
@@ -112,17 +122,17 @@ exe()
 }
 
 #########################################################################
-# Function for printing messeage or command's output in various ways
+# Function for printing message or command's output in various ways
 # USAGE:
-#    show "messeage" [option]
+#    show "message" [option]
 # OPTIONS:
 #       [no option] - verbose mode on (print output to both terminal and to log with time stamp)
-#       v - turn off verbose (print messeage only to log with time stamp)
-#       e - error (print messeage in red color to both terminal and log and exit)
-#       w - warning (print messeage in blue color to both terminal and log but stil continue)
-#       y - print standard messeage in yellow color
-#       g - print standard messeage in green color
-#       t - switch off time mark
+#       v - turn OFF verbose (print message only to log with time stamp)
+#       e - error (print message in red color to both terminal and log and exit)
+#       w - warning (print message in blue color to both terminal and log but stil continue)
+#       y - print standard message in yellow color
+#       g - print standard message in green color
+#       t - turn OFF time mark
 # EXAMPLE USAGE:
 #       show "Hello world"      - print "Hello world" to both terminal and log with time stamp
 #       show "Hello world" t    - print "Hello world" to both terminal and log without time stamp
@@ -135,7 +145,7 @@ exe()
 # IMPORTANT: This funtion collaborates with exe function
 
 # Jan Valosek, fMRI laboratory, Olomouc, 2019-2020. Inspired by Pavel Hok
-# VER=27-12-2019
+# VER=26-02-2020
 #########################################################################
 # Colors definition
 red=$(tput setaf 1)
@@ -146,36 +156,38 @@ normal=$(tput sgr0)
 
 show()
 {
+
+  if [[ $1 == "h" ]] || [[ $1 == "-h" ]] || [[ $1 == "--help" ]] || [[ $1 == "" ]]; then
+    echo -e "Help for printing message or command's output in various ways.\nUSAGE:\n\tshow \"message\" [option]"
+    return
+  fi
+
   # Switch off time mark
   if [[ $2 =~ "t" ]]; then
-
       print_date=""
-
   else
-
       print_date="$(date "+%T_%Y-%m-%d"): "
-
   fi
 
 
-  # ERROR - print messeage in red color to both terminal and log with time stamp and exit
+  # ERROR - print message in red color to both terminal and log with time stamp and exit
   if [[ $2 =~ "e" ]]; then
 
           echo -e "${red}${print_date}ERROR: $1\nExiting...${normal}" 1>&2
           trap_exit
 
-  # WARNING - print messeage in red color to both terminal and log  with time stamp but stil continue
+  # WARNING - print message in red color to both terminal and log  with time stamp but stil continue
   elif [[ $2 =~ "w" ]]; then
 
           #echo -e "${blue}${print_date}WARNING: $1\nContinuing...${normal}" 1>&2
           echo -e "${blue}${print_date}WARNING: $1${normal}" 1>&2
 
-  # Standard messeage in yellow color to both terminal and log with time stamp
+  # Standard message in yellow color to both terminal and log with time stamp
   elif [[ $2 =~ "y" ]]; then
 
           echo -e "${yellow}${print_date}${1}${normal}" 1>&2
 
-  # Standard messeage in green color to both terminal and log with time stamp
+  # Standard message in green color to both terminal and log with time stamp
   elif [[ $2 =~ "g" ]]; then
 
           echo -e "${green}${print_date}${1}${normal}" 1>&2
@@ -183,7 +195,7 @@ show()
   # NO OPTION - output from command or message to screen and to log (= verbose mode)
   elif [[ ! ( $2 =~ "v" ) ]]; then
 
-          # Messeage
+          # message
           if [[ "$1" != "--stdin" ]]; then
                   echo -e "${print_date}${1}"
           # Command
@@ -193,7 +205,7 @@ show()
               done
           fi
 
-  # TURN OFF verbose - output from command or messeage only to log
+  # TURN OFF verbose - output from command or message only to log
   elif [[ $2 =~ "v" ]]; then
 
       if [[ $LOGPATH == "" ]]; then
@@ -201,7 +213,7 @@ show()
           trap_exit
       fi
 
-          # Messeage
+          # message
           if [[ "$1" != "--stdin" ]]; then
                   echo -e "${print_date}${1}" >> $LOGPATH
           # Command
