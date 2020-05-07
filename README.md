@@ -15,6 +15,9 @@ Bundle of basic bash functions used in routine work.
 
 `source bash_basics/bash_basic_functions.sh`
 
-Contact: Jan Valosek, fMRI laboratory, Olomouc
+
+### Contact: 
+
+Jan Valosek, fMRI laboratory, Olomouc
 
 2019-2020
