@@ -13,6 +13,7 @@
 #   f - check if file exists
 #   b - check if binary exists (e.g. FSL, ANTS, SCT, Matlab,...)
 #   e - check if script/function exist and is executable
+# VER=07-05-2020
 #########################################################################
 check_input()
 {
@@ -22,6 +23,7 @@ check_input()
 
   if [[ $flag =~ "h" ]] || [[ $flag == "" ]]; then
     echo -e "Help for function for checking existency of directories or files.\nUSAGE:\n\tcheck_input <argument> DIR_NAME(s) or FILE_NAME(s) or SCRIPT_NAME(s)"
+    echo -e "ARGUMENTS:\n\td - check if directory exists\n\tdc - check if directory exists, if not create it\n\tf - check if file exists\n\tb - check if binary exists (e.g. FSL, ANTS, SCT, Matlab,...)\n\te - check if script/function exist and is executable"
     return
   fi
 
@@ -75,6 +77,9 @@ check_input()
               fi
           fi
           ;;
+      # Invalid option
+      *)
+          echo "Invalid option"
     esac
     shift
   done
@@ -145,7 +150,7 @@ exe()
 # IMPORTANT: This funtion collaborates with exe function
 
 # Jan Valosek, fMRI laboratory, Olomouc, 2019-2020. Inspired by Pavel Hok
-# VER=26-02-2020
+# VER=07-05-2020
 #########################################################################
 # Colors definition
 red=$(tput setaf 1)
@@ -159,6 +164,8 @@ show()
 
   if [[ $1 == "h" ]] || [[ $1 == "-h" ]] || [[ $1 == "--help" ]] || [[ $1 == "" ]]; then
     echo -e "Help for printing message or command's output in various ways.\nUSAGE:\n\tshow \"message\" [option]"
+    echo -e "OPTION:\n\t[no option] - verbose mode on (print output to both terminal and to log with time stamp)\n\tv - turn OFF verbose (print message only to log with time stamp)\n\te - error (print message in red color to both terminal and log and exit)"
+    echo -e "\tw - warning (print message in blue color to both terminal and log but stil continue)\n\ty - print standard message in yellow color\n\tg - print standard message in green color\n\tt - turn OFF time mark"
     return
   fi
 
@@ -275,8 +282,8 @@ trap_exit()
     OS_name=$(uname -a | awk '{print $1}')  # get OS name (Darwin or Linux)
 
     if [[ $OS_name == "Linux" ]]; then
-        sleep 1;kill -SIGUSR1 `ps --pid $$ -o ppid=`;exit   # Find parent process ID (ppid) and set user defined signal (SIGUSR1)
+        sleep 1;kill -SIGUSR1 `ps --pid $$ -o ppid=`#;exit   # Find parent process ID (ppid) and set user defined signal (SIGUSR1)
     elif [[ $OS_name == "Darwin" ]]; then
-        sleep 1;kill -SIGUSR1 `ps $$ -o ppid=`;exit         # Find parent process ID (ppid) and set user defined signal (SIGUSR1)
+        sleep 1;kill -SIGUSR1 `ps $$ -o ppid=`#;exit         # Find parent process ID (ppid) and set user defined signal (SIGUSR1)
     fi
 }
