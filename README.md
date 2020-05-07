@@ -12,6 +12,7 @@ Bundle of basic bash functions used in routine work.
 
 ### Usage:
 `git clone https://github.com/valosekj/bash_basics.git`
+
 `source bash_basics/bash_basic_functions.sh`
 
 Contact: Jan Valosek, fMRI laboratory, Olomouc
