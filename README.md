@@ -11,13 +11,25 @@ Bundle of basic bash functions used in routine work.
 
 
 ### Usage:
-`git clone https://github.com/valosekj/bash_basics.git`
 
-`source bash_basics/bash_basic_functions.sh`
+Clone repo:
+
+```
+git clone https://github.com/valosekj/bash_basics.git
+```
+
+Then include following lines in your script:
+
+```
+source bash_basics/bash_basic_functions.sh
+
+export LOGPATH=./log.txt
+exec > >(tee -a $LOGPATH) 2>&1
+```
 
 
 ### Contact: 
 
 Jan Valosek, fMRI laboratory, Olomouc
 
-2019-2020
+2019-2021
