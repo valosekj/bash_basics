@@ -1,7 +1,17 @@
 #!/bin/bash
 
 # This script contains some bash functions widely used for analysis
-# Jan Valosek, fMRI laboratory Olomouc, Czech Republic, 2018-2020
+# Jan Valosek, fMRI laboratory Olomouc, Czech Republic, 2018-2021
+
+#########################################################################
+# Print current date and time in following human readable format: 25.5.2021 10:34:51
+# USAGE inside scripts:
+#     echo "Started: $(print_current_date_and_time)"
+#########################################################################
+print_current_date_and_time(){
+  date "+%x %r"
+}
+
 
 #########################################################################
 # Function for checking existency of directories or files
