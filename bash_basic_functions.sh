@@ -9,7 +9,7 @@
 #     echo "Started: $(print_current_date_and_time)"
 #########################################################################
 print_current_date_and_time(){
-  date "+%x %r"
+  date +'%x %X'
 }
 
 
