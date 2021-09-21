@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# Create a text file for FSL's topup function
+# The text file will have 4 columns and number of rows corresponding to total
+# number of b0 volumes
+# See for details:
+#     https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/topup/TopupUsersGuide#A--datain
+
+# Jan Valosek, fMRI laboratory Olomouc, Czechia, 2021
+
+if [[ $# -eq 0 ]] || [[ $1 =~ "-h" ]];then
+  echo "Create a text file for FSL's topup function from input b0 files."
+  echo "The text file will have 4 columns and number of rows corresponding to total number of b0 volumes."
+  echo -e "\nNB - script assumes AP-PA phase encoding and default readout 1 for both AP and PA!"
+  echo -e "For details see - https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/topup/TopupUsersGuide#A--datain"
+  echo -e "\nUSAGE:\n\t${0##*/} <b0_AP> <b0_PA>\nExample:\n\t${0##*/} dmri_b0_AP.nii.gz dmri_b0_PA.nii.gz"
+  exit
+fi
+
+# Uncomment for debug
+#set -x
+
+# Immediately exit if error
+set -e -o pipefail
+
+# Global variables
+output_file_name="topup.txt"    # filename for output text file
+readout=1                       # readout - see https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/topup/TopupUsersGuide#A--datain
+input_image_AP=${1/.nii*/}      # Strip out .nii or .nii.gz sufix if passed
+input_image_PA=${2/.nii*/}      # Strip out .nii or .nii.gz sufix if passed
+AP_size="$(fslval ${input_image_AP}.nii.gz dim4)"   # number of volumes in AP image
+PA_size="$(fslval ${input_image_PA}.nii.gz dim4)"   # number of volumes in PA image
+
+# ----
+# Script starts here
+# ----
+
+echo "Input b0 AP file: ${input_image_AP}.nii.gz"
+echo "Input b0 PA file: ${input_image_PA}.nii.gz"
+echo "Number of volumes in AP file: ${AP_size}"
+echo "Number of volumes in PA file: ${PA_size}"
+echo ""
+
+# Create empty file
+touch ${output_file_name}
+
+# Add number of AP rows corresponding to number of volumes in b0 AP file
+for index in $(seq ${AP_size});do
+    echo "0 1 0 ${readout}" >> ${output_file_name}
+done
+
+# Add number of PA rows corresponding to number of volumes in b0 PA file
+for index in $(seq ${PA_size});do
+    echo "0 -1 0 ${readout}" >> ${output_file_name}
+done
+
+echo "Done"
