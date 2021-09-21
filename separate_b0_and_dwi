@@ -18,7 +18,6 @@ fi
 # Immediately exit if error
 set -e -o pipefail
 
-
 # Global variables
 input_image=${1/.nii*/}     # Strip out .nii or .nii.gz sufix if passed
 bvalmin=10                  # b-value threshold
