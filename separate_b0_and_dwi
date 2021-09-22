@@ -66,4 +66,4 @@ ${merge_command_dwi}
 # Remove individual 3D volumes created by fslsplit command
 rm vol*.nii.gz
 
-echo "Finished"
+echo "${0##*/} finished"

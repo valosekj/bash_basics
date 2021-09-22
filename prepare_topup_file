@@ -54,4 +54,4 @@ for index in $(seq ${PA_size});do
     echo "0 -1 0 ${readout}" >> ${output_file_name}
 done
 
-echo "Finished"
+echo "${0##*/} finished"
