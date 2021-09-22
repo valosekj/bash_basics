@@ -12,7 +12,6 @@ print_current_date_and_time(){
   date +'%x %X'
 }
 
-
 #########################################################################
 # Print unique b-values from bval file
 # USAGE:
@@ -24,6 +23,38 @@ get_unique_bvals(){
   tr ' ' '\n' < "$1" | sort -nu | uniq | tr '\n' ' '
   # first tr replaces spaces to new lines (\n), sort and uniq filter only unique values and the second tr replaces new lines back to spaces
 
+}
+
+#########################################################################
+# Get subject ID (in XX-XXX-000 format) from input path
+# USAGE:
+#     get_subject_ID /home/some_user/AB-CDE/AB-CDE-111
+# EXAMPLE OUTPUT:
+#     AB-CDE-111
+#########################################################################
+get_subject_ID(){
+
+    if [[ $1 =~ "." ]];then
+        current_path=$(pwd)
+    fi
+
+    echo $current_path | sed -E 's/.*([A-Z]{2}-[A-Z]{3}-[0-9]{3}).*/\1/'
+}
+
+#########################################################################
+# Get study ID (in XX-XXX format) from input path
+# USAGE:
+#     get_study_ID /home/some_user/AB-CDE/AB-CDE-111
+# EXAMPLE OUTPUT:
+#     AB-CDE
+#########################################################################
+get_study_ID(){
+
+    if [[ $1 =~ "." ]];then
+        current_path=$(pwd)
+    fi
+
+    echo $current_path | sed -E 's/.*([A-Z]{2}-[A-Z]{3}).*/\1/'
 }
 
 #########################################################################
