@@ -39,7 +39,7 @@ echo "Input b0 AP file: ${input_image_AP}.nii.gz"
 echo "Input b0 PA file: ${input_image_PA}.nii.gz"
 echo "Number of volumes in AP file: ${AP_size}"
 echo "Number of volumes in PA file: ${PA_size}"
-echo ""
+
 
 # Create empty file
 touch ${output_file_name}
@@ -54,4 +54,4 @@ for index in $(seq ${PA_size});do
     echo "0 -1 0 ${readout}" >> ${output_file_name}
 done
 
-echo "Done"
+echo "Finished"

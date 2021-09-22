@@ -33,7 +33,6 @@ merge_command_dwi="fslmerge -t ${input_image}_dwi.nii.gz"    # concatenate 3D dw
 
 echo "Input image: ${input_image}.nii.gz"
 echo "Total number of volumes: $(fslval ${input_image}.nii.gz dim4)"
-echo ""
 
 # Split 4D volume in time into individual 3D volumes
 fslsplit ${input_image}.nii.gz vol -t
@@ -67,5 +66,4 @@ ${merge_command_dwi}
 # Remove individual 3D volumes created by fslsplit command
 rm vol*.nii.gz
 
-echo ""
-echo "Done"
+echo "Finished"
