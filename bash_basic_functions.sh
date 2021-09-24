@@ -58,6 +58,23 @@ get_study_ID(){
 }
 
 #########################################################################
+# Get total readout time for diffusion image from its .json file
+# You can get .json file by running dcm2niix on your dMRI data
+# It is useful for example for FSL's topup config file
+# https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/topup/TopupUsersGuide#A--datain
+# USAGE:
+#     get_readout dwi.json
+# EXAMPLE OUTPUT:
+#     0.0768363
+#########################################################################
+get_readout(){
+
+  readout=$(grep "TotalReadoutTime" ${1} | awk '{print $2}' | sed 's/,//')
+  echo "${readout}"
+
+}
+
+#########################################################################
 # Function for checking existency of directories or files
 # USAGE:
 #   check_input.sh <argument> "DIR_NAME(s) or FILE_NAME(s)"

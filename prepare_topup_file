@@ -11,9 +11,10 @@
 if [[ $# -eq 0 ]] || [[ $1 =~ "-h" ]];then
   echo "Create a text file for FSL's topup function from input b0 files."
   echo "The text file will have 4 columns and number of rows corresponding to total number of b0 volumes."
-  echo -e "\nNB - script assumes AP-PA phase encoding and default readout 1 for both AP and PA!"
-  echo -e "For details see - https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/topup/TopupUsersGuide#A--datain"
-  echo -e "\nUSAGE:\n\t${0##*/} <b0_AP> <b0_PA>\nExample:\n\t${0##*/} dmri_b0_AP.nii.gz dmri_b0_PA.nii.gz"
+  echo -e "\nNB - script assumes AP-PA phase encoding and default readout time 0.1, if not passed othwerwise!"
+  echo "Why 0.1? See - https://www.jiscmail.ac.uk/cgi-bin/webadmin?A2=fsl;d552bccb.1312"
+  echo -e "For details about topup file, see - https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/topup/TopupUsersGuide#A--datain"
+  echo -e "\nUSAGE:\n\t${0##*/} <b0_AP> <b0_PA> <readout_time>\nExample:\n\t${0##*/} dmri_b0_AP.nii.gz dmri_b0_PA.nii.gz 0.076"
   exit
 fi
 
@@ -25,7 +26,7 @@ set -e -o pipefail
 
 # Global variables
 output_file_name="topup.txt"    # filename for output text file
-readout=1                       # readout - see https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/topup/TopupUsersGuide#A--datain
+readout=0.1                       # default readout time, if not passed othwerwise - see https://www.jiscmail.ac.uk/cgi-bin/webadmin?A2=fsl;d552bccb.1312
 input_image_AP=${1/.nii*/}      # Strip out .nii or .nii.gz sufix if passed
 input_image_PA=${2/.nii*/}      # Strip out .nii or .nii.gz sufix if passed
 AP_size="$(fslval ${input_image_AP}.nii.gz dim4)"   # number of volumes in AP image
@@ -40,6 +41,13 @@ echo "Input b0 PA file: ${input_image_PA}.nii.gz"
 echo "Number of volumes in AP file: ${AP_size}"
 echo "Number of volumes in PA file: ${PA_size}"
 
+# Check if total readout time was passed
+if [[ ${3} == "" ]]; then
+    echo "Total readout time not passed, using default: ${readout}"
+else
+    readout=${3}
+    echo "Total readout time = ${readout} passed, using it."
+fi
 
 # Create empty file
 touch ${output_file_name}
