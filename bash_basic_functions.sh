@@ -2,6 +2,7 @@
 
 # This script contains some bash functions widely used for analysis
 # Jan Valosek, fMRI laboratory Olomouc, Czech Republic, 2018-2021
+# Thanks to Pavel Hok and Rene Labounek for contribution on some parts of the code
 
 #########################################################################
 # Print current date and time in following human readable format: 25.5.2021 10:34:51
@@ -84,7 +85,6 @@ get_readout(){
 #   f - check if file exists
 #   b - check if binary exists (e.g. FSL, ANTS, SCT, Matlab,...)
 #   e - check if script/function exist and is executable
-# VER=07-05-2020
 #########################################################################
 check_input()
 {
@@ -167,8 +167,7 @@ check_input()
 
 # IMPORTANT: This funtion collaborates and deppends on show function
 
-# Jan Valosek, fMRI laboratory, Olomouc, 2019-2020. Inspired by Pavel Hok
-# VER=26-02-2020
+# Jan Valosek, fMRI laboratory, Olomouc. Inspired by Pavel Hok's function.
 #########################################################################
 exe()
 {
@@ -220,8 +219,7 @@ exe()
 
 # IMPORTANT: This funtion collaborates with exe function
 
-# Jan Valosek, fMRI laboratory, Olomouc, 2019-2020. Inspired by Pavel Hok
-# VER=07-05-2020
+# Jan Valosek, fMRI laboratory, Olomouc. Inspired by Pavel Hok's function.
 #########################################################################
 # Colors definition
 red=$(tput setaf 1)
@@ -313,8 +311,7 @@ show()
 # e.g.
 #   run_matlab "addpath('$MATLAB_SCRIPT'),NODDI_analysis('$subdir','$SUB'),exit"
 
-# Jan Valosek, Rene Labounek, fMRI laboratory, Olomouc, 2018-2020.
-# VER=23-12-2019
+# Jan Valosek, Rene Labounek, fMRI laboratory, Olomouc.
 #########################################################################
 run_matlab()
 {
