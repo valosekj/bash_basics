@@ -70,8 +70,14 @@ done
 echo "b0 volume(s) found at position(s):${list_of_b0}"
 echo "dwi volume(s) found at position(s):${list_of_dwi}"
 
+# Run fslmerge commands
 ${merge_command_b0}
 ${merge_command_dwi}
+
+# Check if files were created
+check_input f "${input_image}_b0.nii.gz" "${input_image}_dwi.nii.gz"
+echo "Created: ${input_image}_b0.nii.gz"
+echo "Created: ${input_image}_dwi.nii.gz"
 
 # Remove individual 3D volumes created by fslsplit command
 rm vol*.nii.gz
