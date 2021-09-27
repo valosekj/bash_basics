@@ -77,7 +77,7 @@ get_readout(){
 #########################################################################
 # Function for checking existency of directories or files
 # USAGE:
-#   check_input.sh <argument> "DIR_NAME(s) or FILE_NAME(s)"
+#   check_input.sh <argument> "DIR_NAME1" "or FILE_NAME2"
 # ARGUMENTS:
 #   d - check if directory exists
 #   dc - check if directory exists, if not create it
