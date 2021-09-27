@@ -37,6 +37,8 @@ get_subject_ID(){
 
     if [[ $1 =~ "." ]];then
         current_path=$(pwd)
+    else
+        current_path=$1
     fi
 
     echo $current_path | sed -E 's/.*([A-Z]{2}-[A-Z]{3}-[0-9]{3}).*/\1/'
@@ -53,6 +55,8 @@ get_study_ID(){
 
     if [[ $1 =~ "." ]];then
         current_path=$(pwd)
+    else
+        current_path=$1
     fi
 
     echo $current_path | sed -E 's/.*([A-Z]{2}-[A-Z]{3}).*/\1/'
