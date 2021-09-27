@@ -231,7 +231,7 @@ normal=$(tput sgr0)
 show()
 {
 
-  if [[ $1 == "h" ]] || [[ $1 == "-h" ]] || [[ $1 == "--help" ]] || [[ $1 == "" ]]; then
+  if [[ $1 == "h" ]] || [[ $1 == "-h" ]] || [[ $1 == "--help" ]]; then
     echo -e "Help for printing message or command's output in various ways.\nUSAGE:\n\tshow \"message\" [option]"
     echo -e "OPTION:\n\t[no option] - verbose mode on (print output to both terminal and to log with time stamp)\n\tv - turn OFF verbose (print message only to log with time stamp)\n\te - error (print message in red color to both terminal and log and exit)"
     echo -e "\tw - warning (print message in blue color to both terminal and log but stil continue)\n\ty - print standard message in yellow color\n\tg - print standard message in green color\n\tt - turn OFF time mark"
