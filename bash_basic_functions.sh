@@ -88,6 +88,7 @@ get_readout(){
 # EXAMPLE OUTPUT:
 #     Process name: 12345 for user: user
 #     Running/Done: 42/8
+# TIP - run in while loop 
 #########################################################################
 monitor_condor(){
 
