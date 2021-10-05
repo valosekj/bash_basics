@@ -80,6 +80,37 @@ get_readout(){
 }
 
 #########################################################################
+# Monitor processes run by condor (e.g. bedpostx_condor)
+# Print number of run processed in running / done format
+# Refresh is done every 30s
+# USAGE:
+#     monitor_condor <process_ID> <user>
+# EXAMPLE OUTPUT:
+#     Process name: 12345 for user: user
+#     Running/Done: 42/8
+#########################################################################
+monitor_condor(){
+
+    # Fetch process ID
+    if [[ $1 == "" ]];then
+        echo "ERROR: Missing process ID. Exitting..."; return
+    else
+        process_id=$1
+    fi
+
+    # Fetch user, if not passed, use current user
+    if [[ $2 == "" ]];then
+        user=${USER}
+    else
+        user=$2
+    fi
+
+   echo "Process ID: ${process_id} for user: ${user}"
+   echo -en "\rRunning/Done: $(condor_q ${user} -wide | grep ${process_id} | awk '{print $6}')/$(condor_q ${user} -wide | grep ${process_id} | awk '{print $5}')";sleep 30
+
+}
+
+#########################################################################
 # Function for checking existency of directories or files
 # USAGE:
 #   check_input.sh <argument> "DIR_NAME1" "or FILE_NAME2"
