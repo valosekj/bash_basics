@@ -88,7 +88,7 @@ get_readout(){
 # EXAMPLE OUTPUT:
 #     Process name: 12345 for user: user
 #     Running/Done: 42/8
-# TIP - run in while loop 
+# TIP - run in while loop
 #########################################################################
 monitor_condor(){
 
@@ -193,7 +193,7 @@ check_input()
 }
 
 #########################################################################
-# Function for execution of certain command and prints its output to log
+# Function for execution of certain command and printing its output to log
 # USAGE:
 #   exe "command" [option]
 # OPTIONS:
