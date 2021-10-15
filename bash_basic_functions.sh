@@ -200,6 +200,8 @@ check_input()
 #   [no option] - verbose mode ON (print command' output to both terminal and to log)
 #   v - turn OFF verbose (only see which command is executed but all its output is redirected to log)
 #   t - turn OFF time mark
+#   l - turn OFF print to log
+#   k - run process on background, monitor it and kill process if it runs over given time interval
 
 # IMPORTANT: This funtion collaborates and deppends on show function
 
@@ -218,18 +220,95 @@ exe()
     return
   fi
 
+  # Turn off time mark
   if [[ $2 =~ t ]]; then
     show "Executing: $1" $2       # Print informative message which command is executed to terminal without time mark
   else
     show "Executing: $1"          # Print informative message which command is executed to terminal with time mark
   fi
-  $1 | show --stdin $2            # Run command and Redirect output of the command to log (v option) or to terminal (without v option)
+
+  # Turn off print to the log
+  if [[ $2 =~ l ]]; then
+      # Monitor process and kill it after some time
+      if [[ $2 =~ k ]]; then
+          $1 &                          # Run the command on background
+          command_only=${1%% *}         # Get the command only (e.g., fslmaths Mprage.nii.gz -> fslmaths)
+          pid=$(ps -eaf -o pid,cmd | awk '/'$command_only'/{ print $1 }' | head -1)
+          wait_then_kill $pid           # Wait until the process finish
+          exit                          # Exit the parrent script - NB - exit works but trap_exit not
+      else
+          $1                            # Only run the command
+      fi
+  else
+    $1 | show --stdin $2          # Run the command and redirect output of the command to log (v option) or to terminal (without v option)
+  fi
 
   # Check if command finished with error, if so, call function show with error argument (see help of function show)
   lasterr=${PIPESTATUS[0]}                # get last error
   if [[ $lasterr != 0 ]]; then
       show "Sub-process returned error value $lasterr" e
   fi
+
+}
+
+#########################################################################
+# Monitor pid and kill it after some time
+# USAGE:
+#    wait_then_kill <pid>
+# EXAMPLE:
+#    wait_then_kill 12345
+#########################################################################
+wait_then_kill()
+{
+
+    limit=36000    # in seconds
+
+    pid=$1      # fetch pid from the first argument
+
+    while true;do
+
+      elapsed_time=$(get_elapsed_time ${pid})   # get elapsed time
+      echo -ne "\rRunning: ${elapsed_time}s"               # print elapsed time in terminal
+
+      if [[ ${elapsed_time} -gt ${limit} ]];then
+          kill_process ${pid}
+          break
+      fi
+      sleep 3600   # sleep for 3600 seconds
+    done
+}
+
+#########################################################################
+# Get elapsed time based on processID (pid)
+# USAGE:
+#    get_elapsed_time 12345
+# EXAMPLE OUTPUT - time in seconds
+#    123
+#########################################################################
+get_elapsed_time()
+{
+    pid=$1
+    ps -p ${pid} -o etimes | awk '{ print $1 }' | sed -n 2p
+    # ps -p ${pid} -o etime retunrs:
+    #    ELAPSED
+    #    123
+    # thus, awk and sed are used to extract only the time itself (123)
+}
+
+
+#########################################################################
+# Kill process based on processID (pid)
+# USAGE:
+#    kill_process 12345
+#########################################################################
+kill_process()
+{
+    pid_to_kill=$1
+    echo -e "\nKilling pid: ${pid_to_kill}"
+    kill -9 ${pid_to_kill}
+    #if [[ $(ps -eaf -o pid,cmd | awk '/'$pid_to_kill'/{ print $1 }' | head -1) == "" ]]; then
+    #  echo "Process $(ps -eaf -o pid,cmd | awk '/'$pid_to_kill'/{ print $3 }' | head -1) killed."
+    #fi
 }
 
 #########################################################################
