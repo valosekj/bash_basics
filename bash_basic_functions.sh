@@ -266,7 +266,8 @@ get_pid()
 }
 
 #########################################################################
-# Monitor pid and kill it after some time
+# Monitor process based on its pid and kill it if the process run longer
+# than set time limit
 # USAGE:
 #    wait_then_kill <pid>
 # EXAMPLE:
@@ -275,20 +276,39 @@ get_pid()
 wait_then_kill()
 {
 
-    limit=36000    # in seconds
-
     pid=$1      # fetch pid from the first argument
 
+    # set default time limit if not passed
+    if [[ $2 == "" ]];then
+        limit=36000    # in seconds (=10 hours)
+    else
+        limit=$2
+    fi
+
+    echo "Time limit for pid ${pid} set to: ${limit}s"
+
+    refresh=360     # sleep interval - 3600 seconds (=10 mins)
+
+    # endless loop
     while true;do
 
       elapsed_time=$(get_elapsed_time ${pid})   # get elapsed time
-      echo -ne "\rRunning: ${elapsed_time}s"               # print elapsed time in terminal
+      echo -ne "\rRunning: ${elapsed_time}s (refresh every ${refresh}s)"    # print elapsed time in terminal
 
+      # kill process and exit the parent script
       if [[ ${elapsed_time} -gt ${limit} ]];then
+          echo ""
           kill_process ${pid}
-          break
+          exit    # Exit the parrent script - NB - exit works but trap_exit not
+      # if process finished sucesfully, break the loop
+      elif [[ ${elapsed_time} == "" ]];then
+          echo ""
+          show "Process with pid ${pid} finished sucesfully"
+          break   # Break the loop
       fi
-      sleep 3600   # sleep for 3600 seconds
+
+      sleep ${refresh}
+
     done
 }
 
@@ -302,11 +322,21 @@ wait_then_kill()
 get_elapsed_time()
 {
     pid=$1
-    ps -p ${pid} -o etimes | awk '{ print $1 }' | sed -n 2p
+    elapsed_time=$(ps -p ${pid} -o etimes | awk '{ print $1 }' | sed -n 2p)
     # ps -p ${pid} -o etime retunrs:
     #    ELAPSED
     #    123
     # thus, awk and sed are used to extract only the time itself (123)
+
+    # NB - if process finished, it is necessary to set elapsed_time varibable to empty string, otherwise
+    # "set -e -o pipefail" kill the parent script
+    if [[ ${elapsed_time} != "" ]];then
+        echo ${elapsed_time}
+    else
+        elapsed_time=""
+        echo ${elapsed_time}
+    fi
+
 }
 
 
@@ -318,7 +348,7 @@ get_elapsed_time()
 kill_process()
 {
     pid_to_kill=$1
-    echo -e "\nKilling pid: ${pid_to_kill}"
+    show "Killing pid: ${pid_to_kill}"
     kill -9 ${pid_to_kill}
     #if [[ $(ps -eaf -o pid,cmd | awk '/'$pid_to_kill'/{ print $1 }' | head -1) == "" ]]; then
     #  echo "Process $(ps -eaf -o pid,cmd | awk '/'$pid_to_kill'/{ print $3 }' | head -1) killed."
