@@ -251,6 +251,21 @@ exe_kill()
 }
 
 #########################################################################
+# Get pid based on full process name
+# USAGE:
+#   get_pid "command"
+# EXAMPLE:
+#   get_pid "fast t1.nii.gz"
+# OUTPUT:
+#   271648
+#########################################################################
+get_pid()
+{
+  command=$1
+  pgrep --full "${command}"
+}
+
+#########################################################################
 # Monitor pid and kill it after some time
 # USAGE:
 #    wait_then_kill <pid>
