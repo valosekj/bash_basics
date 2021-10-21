@@ -301,9 +301,9 @@ get_pid_and_name()
 # Monitor process based on its pid and kill it if the process run longer
 # than set time limit
 # USAGE:
-#    wait_then_kill <pid>
+#    wait_then_kill <pid> <time_limit> <refresh_time>
 # EXAMPLE:
-#    wait_then_kill 12345
+#    wait_then_kill 12345 360 10
 #########################################################################
 wait_then_kill()
 {
@@ -326,7 +326,11 @@ wait_then_kill()
 
     echo "Time limit for pid ${pid} set to: ${limit}s"
 
-    refresh=360     # sleep interval - 3600 seconds (=10 mins)
+    if [[ $3 == "" ]];then
+    	refresh=360     # sleep interval - 3600 seconds (=10 mins)
+    else
+    	refresh=$3
+    fi
 
     # endless loop
     while true;do
