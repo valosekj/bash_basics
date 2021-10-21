@@ -274,6 +274,30 @@ get_pid()
 }
 
 #########################################################################
+# Get pid and full process name based on process name
+# USAGE:
+#   get_pid_and_name "command"
+# EXAMPLE:
+#   get_pid_and_name bet
+# OUTPUT:
+#   271648 /bin/sh /usr/local/fsl/bin/bet Mprage.gz Mprage_brain.nii.gz -B -f 0.3
+#   271659 /bin/sh /usr/local/fsl/bin/bet Mprage.gz Mprage_brain.nii.gz -B -f 0.3
+#########################################################################
+get_pid_and_name()
+{
+
+  if [[ $1 == "" ]] || [[ $1 == "--help" ]];then
+  	echo "Get pid and full process name based on process name"
+  	echo -e "USAGE:\n\tget_pid_and_name <command_name>"
+  	echo -e "EXAMPLE:\n\tget_pid_and_name bet"
+  	return
+  fi
+
+  command=$1
+  pgrep --full -a "${command}"
+}
+
+#########################################################################
 # Monitor process based on its pid and kill it if the process run longer
 # than set time limit
 # USAGE:
