@@ -261,6 +261,14 @@ exe_kill()
 #########################################################################
 get_pid()
 {
+
+  if [[ $1 == "" ]] || [[ $1 == "--help" ]];then
+  	echo "Get pid based on full process name"
+  	echo -e "USAGE:\n\tget_pid \"command\""
+  	echo -e "EXAMPLE:\n\tget_pid \"fast t1.nii.gz\""
+  	return
+  fi
+
   command=$1
   pgrep --full "${command}"
 }
@@ -275,6 +283,13 @@ get_pid()
 #########################################################################
 wait_then_kill()
 {
+
+    if [[ $1 == "" ]] || [[ $1 == "--help" ]];then
+  	  echo "Monitor process based on its pid and kill it if the process run longer than time limit"
+      echo -e "USAGE:\n\twait_then_kill <pid> <time_limit [s]> <refresh_time [s]>"
+      echo -e "EXAMPLE:\n\twait_then_kill 54345 360 10"
+      return
+    fi
 
     pid=$1      # fetch pid from the first argument
 
@@ -321,6 +336,14 @@ wait_then_kill()
 #########################################################################
 get_elapsed_time()
 {
+
+    if [[ $1 == "--help" ]];then
+      echo "Get elapsed time based on processID (pid)"
+      echo -e "USAGE:\n\tget_elapsed_time <pid>"
+      echo -e "EXAMPLE:\n\tget_elapsed_time 54345"
+      return
+    fi
+
     pid=$1
     elapsed_time=$(ps -p ${pid} -o etimes | awk '{ print $1 }' | sed -n 2p)
     # ps -p ${pid} -o etime retunrs:
@@ -347,6 +370,14 @@ get_elapsed_time()
 #########################################################################
 kill_process()
 {
+
+    if [[ $1 == "" ]] || [[ $1 == "--help" ]];then
+     echo "Kill process based on processID (pid). TIP - you can get pid using get_pid function."
+     echo -e "USAGE:\n\tkill_process <pid>"
+     echo -e "EXAMPLE:\n\tkill_process 54345"
+     return
+    fi
+
     pid_to_kill=$1
     show "Killing pid: ${pid_to_kill}"
     kill -9 ${pid_to_kill}
