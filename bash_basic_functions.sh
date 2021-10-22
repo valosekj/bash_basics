@@ -63,7 +63,7 @@ get_study_ID(){
 }
 
 #########################################################################
-# Get total readout time for diffusion image from its .json file
+# Fetch total readout time for diffusion image from its .json file
 # You can get .json file by running dcm2niix on your dMRI data
 # It is useful for example for FSL's topup config file
 # https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/topup/TopupUsersGuide#A--datain
@@ -73,6 +73,13 @@ get_study_ID(){
 #     0.0768363
 #########################################################################
 get_readout(){
+
+  if [[ $1 == "" ]] || [[ $1 == "--help" ]];then
+  	echo "Fetch total readout time for diffusion image from its .json file. TIP - .json file can be obtained by dcm2niix"
+  	echo -e "USAGE:\n\tget_readout <dwi_file.json>"
+  	echo -e "EXAMPLE:\n\tget_readout <dwi.json>"
+  	return
+  fi
 
   readout=$(grep "TotalReadoutTime" ${1} | awk '{print $2}' | sed 's/,//')
   echo "${readout}"
@@ -230,6 +237,188 @@ exe()
   if [[ $lasterr != 0 ]]; then
       show "Sub-process returned error value $lasterr" e
   fi
+}
+
+#########################################################################
+# Execute certain command, monitor it and kill if it runs over time limit
+# USAGE:
+#   exe_kill "command" [time_limit_in_sec]
+# EXAMPLE:
+#   exe_kill "fast t1.nii.gz" 600
+#########################################################################
+exe_kill()
+{
+
+  show "Executing: $1"          # Print informative message which command is executed to terminal with time mark
+
+  $1 &                          # Run the command on background
+  pid=$(get_pid $1)             # Get process ID (pid)
+  wait_then_kill $pid $2        # Wait until the process finish
+
+}
+
+#########################################################################
+# Get pid based on full process name
+# USAGE:
+#   get_pid "command"
+# EXAMPLE:
+#   get_pid "fast t1.nii.gz"
+# OUTPUT:
+#   271648
+#########################################################################
+get_pid()
+{
+
+  if [[ $1 == "" ]] || [[ $1 == "--help" ]];then
+  	echo "Get pid based on full process name"
+  	echo -e "USAGE:\n\tget_pid \"command\""
+  	echo -e "EXAMPLE:\n\tget_pid \"fast t1.nii.gz\""
+  	return
+  fi
+
+  command=$1
+  pgrep --full "${command}"
+}
+
+#########################################################################
+# Get pid and full process name based on process name
+# USAGE:
+#   get_pid_and_name "command"
+# EXAMPLE:
+#   get_pid_and_name bet
+# OUTPUT:
+#   271648 /bin/sh /usr/local/fsl/bin/bet Mprage.gz Mprage_brain.nii.gz -B -f 0.3
+#   271659 /bin/sh /usr/local/fsl/bin/bet Mprage.gz Mprage_brain.nii.gz -B -f 0.3
+#########################################################################
+get_pid_and_name()
+{
+
+  if [[ $1 == "" ]] || [[ $1 == "--help" ]];then
+  	echo "Get pid and full process name based on process name"
+  	echo -e "USAGE:\n\tget_pid_and_name <command_name>"
+  	echo -e "EXAMPLE:\n\tget_pid_and_name bet"
+  	return
+  fi
+
+  command=$1
+  pgrep --full -a "${command}"
+}
+
+#########################################################################
+# Monitor process based on its pid and kill it if the process run longer
+# than set time limit
+# USAGE:
+#    wait_then_kill <pid> <time_limit> <refresh_time>
+# EXAMPLE:
+#    wait_then_kill 12345 360 10
+#########################################################################
+wait_then_kill()
+{
+
+    if [[ $1 == "" ]] || [[ $1 == "--help" ]];then
+  	  echo "Monitor process based on its pid and kill it if the process run longer than time limit"
+      echo -e "USAGE:\n\twait_then_kill <pid> <time_limit [s]> <refresh_time [s]>"
+      echo -e "EXAMPLE:\n\twait_then_kill 54345 360 10"
+      return
+    fi
+
+    pid=$1      # fetch pid from the first argument
+
+    # set default time limit if not passed
+    if [[ $2 == "" ]];then
+        limit=36000    # in seconds (=10 hours)
+    else
+        limit=$2
+    fi
+
+    echo "Time limit for pid ${pid} set to: ${limit}s"
+
+    if [[ $3 == "" ]];then
+    	refresh=360     # sleep interval - 3600 seconds (=10 mins)
+    else
+    	refresh=$3
+    fi
+
+    # endless loop
+    while true;do
+
+      elapsed_time=$(get_elapsed_time ${pid})   # get elapsed time
+      echo -ne "\rRunning: ${elapsed_time}s (refresh every ${refresh}s)"    # print elapsed time in terminal
+
+      # kill process and exit the parent script
+      if [[ ${elapsed_time} -gt ${limit} ]];then
+          echo ""
+          kill_process ${pid}
+          exit    # Exit the parrent script - NB - exit works but trap_exit not
+      # if process finished sucesfully, break the loop
+      elif [[ ${elapsed_time} == "" ]];then
+          echo ""
+          show "Process with pid ${pid} finished sucesfully"
+          break   # Break the loop
+      fi
+
+      sleep ${refresh}
+
+    done
+}
+
+#########################################################################
+# Get elapsed time based on processID (pid)
+# USAGE:
+#    get_elapsed_time 12345
+# EXAMPLE OUTPUT - time in seconds
+#    123
+#########################################################################
+get_elapsed_time()
+{
+
+    if [[ $1 == "--help" ]];then
+      echo "Get elapsed time based on processID (pid)"
+      echo -e "USAGE:\n\tget_elapsed_time <pid>"
+      echo -e "EXAMPLE:\n\tget_elapsed_time 54345"
+      return
+    fi
+
+    pid=$1
+    elapsed_time=$(ps -p ${pid} -o etimes | awk '{ print $1 }' | sed -n 2p)
+    # ps -p ${pid} -o etime retunrs:
+    #    ELAPSED
+    #    123
+    # thus, awk and sed are used to extract only the time itself (123)
+
+    # NB - if process finished, it is necessary to set elapsed_time varibable to empty string, otherwise
+    # "set -e -o pipefail" kill the parent script
+    if [[ ${elapsed_time} != "" ]];then
+        echo ${elapsed_time}
+    else
+        elapsed_time=""
+        echo ${elapsed_time}
+    fi
+
+}
+
+
+#########################################################################
+# Kill process based on processID (pid)
+# USAGE:
+#    kill_process 12345
+#########################################################################
+kill_process()
+{
+
+    if [[ $1 == "" ]] || [[ $1 == "--help" ]];then
+     echo "Kill process based on processID (pid). TIP - you can get pid using get_pid function."
+     echo -e "USAGE:\n\tkill_process <pid>"
+     echo -e "EXAMPLE:\n\tkill_process 54345"
+     return
+    fi
+
+    pid_to_kill=$1
+    show "Killing pid: ${pid_to_kill}"
+    kill -9 ${pid_to_kill}
+    #if [[ $(ps -eaf -o pid,cmd | awk '/'$pid_to_kill'/{ print $1 }' | head -1) == "" ]]; then
+    #  echo "Process $(ps -eaf -o pid,cmd | awk '/'$pid_to_kill'/{ print $3 }' | head -1) killed."
+    #fi
 }
 
 #########################################################################
