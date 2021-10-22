@@ -5,13 +5,6 @@
 
 # Jan Valosek, fMRI laboratory Olomouc, Czechia, 2021
 
-if [[ $# -eq 0 ]] || [[ $1 =~ "-h" ]];then
-  echo "Separate b0 and DWI volumes from 4D diffusion image. The output files will"
-  echo "have a suffix (_b0 and _dwi) appended to the input file name."
-  echo -e "\nUSAGE:\n\t${0##*/} <input 4D diffusion image>\nExample:\n\t${0##*/} dmri.nii.gz"
-  exit
-fi
-
 # Uncomment for debug
 #set -x
 
@@ -21,65 +14,107 @@ set -e -o pipefail
 # Load some useful functions
 source /usr/local/lib/bash_basics/bash_basic_functions.sh
 
-# Global variables
-input_image=${1/.nii*/}     # Strip out .nii or .nii.gz sufix if passed
-bvalmin=10                  # b-value threshold
-volume_number=0
-list_of_b0=""               # b0 volumes indexes
-list_of_dwi=""              # dwi volumes indexes
-merge_command_b0="fslmerge -t ${input_image}_b0.nii.gz"    # concatenate 3D b0 volumes in time to single 4D volume
-merge_command_dwi="fslmerge -t ${input_image}_dwi.nii.gz"    # concatenate 3D dwi volumes in time to single 4D volume
-
 # ----
 # Script starts here
 # ----
+main()
+{
 
-echo "Input image: ${input_image}.nii.gz"
-echo "Total number of volumes: $(fslval ${input_image}.nii.gz dim4)"
-
-# Check if .json file for AP .nii.gz file exists, if so, fetch total readout time from it
-# TIP - you can get .json file by running dcm2niix on your DICOM images
-if [[ -f ${input_image}.json ]]; then
-    echo "Total readout time is: (use it for topup config file)"
-    get_readout ${input_image}.json
-fi
-
-# Split 4D volume in time into individual 3D volumes
-fslsplit ${input_image}.nii.gz vol -t
-
-# Loop across individual b-values in .bval file
-for bvalue in $(cat ${input_image}.bval);do
-
-    # Check if currently processed b-values is lower than bvalmin, if so assume it is b0
-    if [[ ${bvalue} -lt ${bvalmin} ]];then
-        current_volume="vol$(printf %04d ${volume_number}).nii.gz"
-        merge_command_b0="${merge_command_b0} ${current_volume}"
-        list_of_b0="${list_of_b0} ${volume_number}"
-    # All other b-values are assumed as a dwi volumes
-    else
-        current_volume="vol$(printf %04d ${volume_number}).nii.gz"
-        merge_command_dwi="${merge_command_dwi} ${current_volume}"
-        list_of_dwi="${list_of_dwi} ${volume_number}"
-
+    if [[ $# -eq 0 ]] || [[ $1 =~ "-h" ]];then
+        print_help
     fi
 
-    volume_number=$((${volume_number}+1))  # increment volume_number
+    # Global variables
+    input_image=${1/.nii*/}     # Strip out .nii or .nii.gz sufix if passed
+    bvalmin=10                  # b-value threshold
+    volume_number=0
+    list_of_b0=""               # b0 volumes indexes
+    list_of_dwi=""              # dwi volumes indexes
+    merge_command_b0="fslmerge -t ${input_image}_b0.nii.gz"    # concatenate 3D b0 volumes in time to single 4D volume
+    merge_command_dwi="fslmerge -t ${input_image}_dwi.nii.gz"    # concatenate 3D dwi volumes in time to single 4D volume
 
-done
+    if [[ $2 == "" ]];then
+        identify_bvalues
+        create_b0_and_dwi
+    # Only identify b0 and dwi and print it to terminal. Do not create b0 and dwi files
+    elif [[ $2 == "-i" ]];then
+        identify_bvalues
+    else
+        echo "ERROR: Invalid input(s)"
+        print_help
+    fi
+}
 
-echo "b0 volume(s) found at position(s):${list_of_b0}"
-echo "dwi volume(s) found at position(s):${list_of_dwi}"
+print_help()
+{
+    echo "Separate b0 and DWI volumes from 4D diffusion image. The output files will have a suffix (_b0 and _dwi) appended to the input file name."
+    echo "Jan Valosek, fMRI laboratory Olomouc"
+    echo -e "\nUSAGE:\n\t${0##*/} <input 4D diffusion image> <option>\nExample:\n\t${0##*/} dmri.nii.gz"
+    echo -e "OPTION(s)\n\t-i      info mode = only identify b0 and dwi and print it to terminal, do not create nii files"
+    exit
+}
 
-# Run fslmerge commands
-${merge_command_b0}
-${merge_command_dwi}
+identify_bvalues()
+{
+    check_input f "${input_image}.bval"
 
-# Check if files were created
-check_input f "${input_image}_b0.nii.gz" "${input_image}_dwi.nii.gz"
-echo "Created: ${input_image}_b0.nii.gz"
-echo "Created: ${input_image}_dwi.nii.gz"
+    echo "Input nii image: ${input_image}.nii.gz"
+    echo "Input bval file: ${input_image}.bval"
+    echo "Total number of volumes: $(fslval ${input_image}.nii.gz dim4)"
+    echo "Following unique b-values were identified:$(get_unique_bvals ${input_image}.bval)"
+    echo "Threshold for b0 is set to ${bvalmin} s/mm2."
+    echo ""
 
-# Remove individual 3D volumes created by fslsplit command
-rm vol*.nii.gz
+    # Check if .json file for AP .nii.gz file exists, if so, fetch total readout time from it
+    # TIP - you can get .json file by running dcm2niix on your DICOM images
+    if [[ -f ${input_image}.json ]]; then
+        echo "Total readout time is: (use it for topup config file)"
+        get_readout ${input_image}.json
+    fi
 
-echo "${0##*/} finished"
+    # Loop across individual b-values in .bval file
+    for bvalue in $(cat ${input_image}.bval);do
+
+        # Check if currently processed b-values is lower than bvalmin, if so assume it is b0
+        if [[ ${bvalue} -lt ${bvalmin} ]];then
+            current_volume="vol$(printf %04d ${volume_number}).nii.gz"
+            merge_command_b0="${merge_command_b0} ${current_volume}"
+            list_of_b0="${list_of_b0} ${volume_number}"
+        # All other b-values are assumed as a dwi volumes
+        else
+            current_volume="vol$(printf %04d ${volume_number}).nii.gz"
+            merge_command_dwi="${merge_command_dwi} ${current_volume}"
+            list_of_dwi="${list_of_dwi} ${volume_number}"
+
+        fi
+
+        volume_number=$((${volume_number}+1))  # increment volume_number
+
+    done
+
+    echo "b0 volume(s) found at position(s):${list_of_b0}"
+    echo "dwi volume(s) found at position(s):${list_of_dwi}"
+}
+
+create_b0_and_dwi()
+{
+
+    # Split 4D volume in time into individual 3D volumes
+    fslsplit ${input_image}.nii.gz vol -t
+
+    # Run fslmerge commands
+    ${merge_command_b0}
+    ${merge_command_dwi}
+
+    # Check if files were created
+    check_input f "${input_image}_b0.nii.gz" "${input_image}_dwi.nii.gz"
+    echo "Created: ${input_image}_b0.nii.gz"
+    echo "Created: ${input_image}_dwi.nii.gz"
+
+    # Remove individual 3D volumes created by fslsplit command
+    rm vol*.nii.gz
+
+    echo "${0##*/} finished"
+}
+
+main "$@"
