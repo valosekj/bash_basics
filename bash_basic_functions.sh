@@ -425,6 +425,45 @@ kill_process()
 }
 
 #########################################################################
+# Send email when process finish
+# USAGE:
+#    send_email_when_finish <list_of_pids> <recipients> <refresh_time_in_sec>
+#########################################################################
+send_email_when_finish()
+{
+
+    list_of_pids=$1
+
+    recipients=$2
+
+    if [[ $3 == "" ]];then
+    	refresh=5     # sleep interval in seconds
+    else
+    	refresh=$3
+    fi
+
+
+    running=true
+
+    while ${running};do
+        # Loop across individual processID (pid)
+        for pid in ${list_of_pids};do
+            # Check if process runs based on pid
+            if $(ps -p ${pid} &>/dev/null);then
+                running=true
+                echo "${pid} running"
+            else
+                running=false
+                echo "${pid} finished"
+            fi
+            sleep ${refresh}
+        done
+    done
+
+    echo "All processIDs done." | mail -s "All processIDs done" ${recipients};
+}
+
+#########################################################################
 # Function for printing message or command's output in various ways
 # USAGE:
 #    show "message" [option]
