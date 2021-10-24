@@ -428,16 +428,17 @@ kill_process()
 # Send email when process finish
 # USAGE:
 #    send_email_when_finish <list_of_pids> <recipients> <refresh_time_in_sec>
+# EXMAMPLE:
+#   send_email_when_finish ${list_of_pids}
 #########################################################################
 send_email_when_finish()
 {
+    # list_of_pids is an array and is passed as the first argument
 
-    list_of_pids=$1
-
-    recipients=$2
+    recipients=$2   # list of email adress
 
     if [[ $3 == "" ]];then
-    	refresh=5     # sleep interval in seconds
+    	refresh=2     # sleep interval in seconds
     else
     	refresh=$3
     fi
@@ -446,18 +447,33 @@ send_email_when_finish()
     running=true
 
     while ${running};do
+
+        # initialize new list every while iteration
+        # this contains true or false for each process depending if process run or not
+        running_list=""
+
         # Loop across individual processID (pid)
-        for pid in ${list_of_pids};do
+        for pid in "${list_of_pids[@]}";do
             # Check if process runs based on pid
             if $(ps -p ${pid} &>/dev/null);then
-                running=true
+                running_list="$running_list true"   # append to the list
                 echo "${pid} running"
             else
-                running=false
+                running_list="$running_list false"   # append to the list
                 echo "${pid} finished"
             fi
-            sleep ${refresh}
         done
+
+        sleep ${refresh}    # wait before next while iteration
+
+        # If list contains only false (i.e., do not contains any running process (true)), switch running variable to
+        # false and stop while loop
+        if [[ ! $running_list =~ "true" ]];then
+            running=false
+        else
+            running=true
+        fi
+
     done
 
     echo "All processIDs done." | mail -s "All processIDs done" ${recipients};
