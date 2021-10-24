@@ -277,7 +277,7 @@ get_pid()
   fi
 
   command=$1
-  pgrep --full "${command}"
+  pgrep -f "${command}"   # -f -- use full process name to match
 }
 
 #########################################################################
@@ -301,7 +301,11 @@ get_pid_and_name()
   fi
 
   command=$1
-  pgrep --full -a "${command}"
+  if [[ $(uname) == "Linux" ]];then
+    pgrep -f -a "${command}"          # -a -- list PID and full command line
+  elif [[ $(uname) == "Darwin" ]]; then
+    pgrep -f -l "${command}"          # -l -- print the process name in addition to the process ID for each matching process
+  fi
 }
 
 #########################################################################
