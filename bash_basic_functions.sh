@@ -401,7 +401,6 @@ get_elapsed_time()
 
 }
 
-
 #########################################################################
 # Kill process based on processID (pid)
 # USAGE:
