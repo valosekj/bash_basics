@@ -430,6 +430,8 @@ kill_process()
 #    send_email_when_finish <list_of_pids> <recipients> <refresh_time_in_sec>
 # EXMAMPLE:
 #   send_email_when_finish ${list_of_pids}
+# NB - ${list_of_pids} variable should be defined as list_of_pids=("68106" "68107")
+# TIP - PID(s) could be obtained by get_pid() function
 #########################################################################
 send_email_when_finish()
 {
