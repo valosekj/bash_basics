@@ -427,24 +427,29 @@ kill_process()
 #########################################################################
 # Send email when process finish
 # USAGE:
-#    send_email_when_finish <list_of_pids> <recipients> <refresh_time_in_sec>
+#    send_email_when_finish <list_of_pids> <email_filename> <refresh_time_in_sec>
 # EXMAMPLE:
-#   send_email_when_finish ${list_of_pids}
+#   send_email_when_finish ${list_of_pids} dummy_email.txt
+#
 # NB - ${list_of_pids} variable should be defined as list_of_pids=("68106" "68107")
 # TIP - PID(s) could be obtained by get_pid() function
+# TIP - you can create email_filename by echo, e.g.:
+#     echo -e "To: <email_1>,<email_2>\nSubject:My subject\n\nEmail body" >> dummy_email.txt
+# Then pass dummy_email.txt as the second argument
 #########################################################################
 send_email_when_finish()
 {
     # list_of_pids is an array and is passed as the first argument
 
-    recipients=$2   # list of email adress
+    email_filename=$2   # list of email adress
+
+    check_input f ${email_filename}
 
     if [[ $3 == "" ]];then
     	refresh=2     # sleep interval in seconds
     else
     	refresh=$3
     fi
-
 
     running=true
 
@@ -478,7 +483,9 @@ send_email_when_finish()
 
     done
 
-    echo "All processIDs done." | mail -s "All processIDs done" ${recipients};
+    echo "All processIDs done."
+    cat ${email_filename} | msmtp --tls-certcheck=off --account fnol -t
+    # -t -- read additional recipients from the mail
 }
 
 #########################################################################
