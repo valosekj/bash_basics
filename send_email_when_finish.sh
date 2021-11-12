@@ -17,6 +17,9 @@
 # Then pass dummy_email.txt as the second argument
 #########################################################################
 
+# Load some useful functions
+source /usr/local/lib/bash_basics/bash_basic_functions.sh
+
 # list_of_pids is an array and is passed as the first argument
 
 # Send email right now - do not monitor any process
