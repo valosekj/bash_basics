@@ -35,7 +35,7 @@ elif [[ $1 == "" ]] || [[ $1 == "--help" ]];then
     echo -e "\nNB - ${list_of_pids} variable should be defined as list_of_pids=("68106" "68107")"
     echo -e "TIP - PID(s) could be obtained by get_pid() function"
     echo -e "TIP - list_of_pids can be replaced by \"send_now\" if you want to send email immediately"
-    return
+    exit
 else
 
     if [[ $3 == "" ]];then
