@@ -30,8 +30,9 @@ exec > >(tee -a $LOGPATH) 2>&1
 Or, you can `source` the `bash_basic_functions.sh` script within your `bashrc`/`zshrc` file to be able to use functions in CLI:
 
 ```
-# Add this line to your /home/<your_username>/.bashrc or /home/<your_username>/.zshrc file
+# Add these lines to your /home/<your_username>/.bashrc or /home/<your_username>/.zshrc file
 source bash_basics/bash_basic_functions.sh
+PATH="/usr/local/lib/bash_basics/:$PATH"
 ```
 
 ### Contact: 
