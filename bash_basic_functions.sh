@@ -376,7 +376,7 @@ wait_then_kill()
 get_elapsed_time()
 {
 
-    if [[ $1 == "--help" ]];then
+    if [[ $1 == "" ]] || [[ $1 == "--help" ]];then
       echo "Get elapsed time based on processID (pid)"
       echo -e "USAGE:\n\tget_elapsed_time <pid>"
       echo -e "EXAMPLE:\n\tget_elapsed_time 54345"
