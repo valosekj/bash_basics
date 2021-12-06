@@ -85,4 +85,4 @@ for index in $(seq ${second_size});do
     echo "0 ${second_sign}1 0 ${readout}" >> ${output_file_name}
 done
 
-echo -e "Created:\n$(cat ${output_file_name})"
+echo -e "Created ${output_file_name}:\n$(cat ${output_file_name})"
