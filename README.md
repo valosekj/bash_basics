@@ -37,11 +37,15 @@ Used for manipulation with diffusion-weighted MRI data (dMRI/DWI)
  
  `prepare_eddy_file` - create a text file for FSL's eddy function
  
-  `separate_b0_and_dwi` - separate b0 and DWI volumes from 4D diffusion image
+ `get_unique_bvals` - get unique b-values from input bval file
+ 
+ `count_bvals.py` - python script for counting number of DWI volumes acquired with given b-value
+ 
+ `separate_b0_and_dwi` - separate b0 and DWI volumes from 4D diffusion image
   
-  `merge_bval_bvec_files` - merge bval/bvec files into one
+ `merge_bval_bvec_files` - merge bval/bvec files into one
   
-  `parse_SliceTiming_from_json.m` - matlab function for fetching of SliceTiming parameter from .json (used for --slspec flag of FSL's eddy)
+ `parse_SliceTiming_from_json.m` - matlab function for fetching of SliceTiming parameter from .json (used for --slspec flag of FSL's eddy)
 
 ### Some other functions/scripts:
 

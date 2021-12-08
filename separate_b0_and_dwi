@@ -61,7 +61,16 @@ identify_bvalues()
     echo "Input nii image: ${input_image}.nii.gz"
     echo "Input bval file: ${input_image}.bval"
     echo "Total number of volumes: $(fslval ${input_image}.nii.gz dim4)"
-    echo "Following unique b-values were identified:$(get_unique_bvals ${input_image}.bval)"
+    echo "Following unique b-values were identified: $(get_unique_bvals ${input_image}.bval)"
+    # Print how many DWI volumes where acquired with specific b-value
+    # Check if there are more than one bvalue
+    if [[ $(get_unique_bvals ${input_image}.bval | wc -w) -gt 1 ]];then
+        # Loop across unique bvalues
+        for bvalue in $(get_unique_bvals ${input_image}.bval);do
+          # Count number of given bvalue
+          echo "Number of DWI volumes with b=${bvalue}: $(count_bvals.py ${input_image}.bval ${bvalue})"
+        done
+    fi
     echo "Threshold for b0 is set to ${bvalmin} s/mm2."
     echo ""
 

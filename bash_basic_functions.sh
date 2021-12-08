@@ -23,7 +23,6 @@ print_current_date_and_time(){
 get_unique_bvals(){
   tr ' ' '\n' < "$1" | sort -nu | uniq | tr '\n' ' '
   # first tr replaces spaces to new lines (\n), sort and uniq filter only unique values and the second tr replaces new lines back to spaces
-
 }
 
 #########################################################################
