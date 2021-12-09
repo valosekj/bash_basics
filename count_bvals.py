@@ -11,10 +11,15 @@ def main():
     filename = sys.argv[1]
     bval_to_count = sys.argv[2]
 
-    # Read bval file (it is simple text file)
-    file = open(filename, "r")
-    content = file.read()
-    file.close()
+    # Check if file exists
+    try:
+        # Read bval file (it is simple text file)
+        file = open(filename, "r")
+        content = file.read()
+        file.close()
+    except IOError:
+        print("ERROR: File {} not found".format(filename))
+        sys.exit()
 
     # Convert input values into python list
     content_list = content.split(" ")
