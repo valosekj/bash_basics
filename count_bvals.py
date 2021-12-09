@@ -1,6 +1,12 @@
 #!/usr/bin/python
 
 # Count number of DWI volumes acquired with given b-value
+
+# USAGE from CLI:
+#       count_bvals.py <bval_file> <bvalue>
+# Example:
+#       count_bvals.py dmri.bval 1000
+
 # Jan Valosek
 
 import sys
