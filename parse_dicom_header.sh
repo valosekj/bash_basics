@@ -40,7 +40,7 @@ tags_to_keywords=(
 for keyword in "${!tags_to_keywords[@]}";do
 
       value=$(dicom_hdr "$dcm" | grep "${tags_to_keywords[$keyword]}" | awk 'NF{ print $NF }' | sed 's:.*\/\/::g')
-      # awk 'NF{ print $NF }' - get the last column; sed 's:.*\/\/::g' - get text after //
+      # awk 'NF{ print $NF }' - get the last column; sed 's:.*\/\/::g' - remove everything before //
       echo -e "$keyword - $value"
 
 done
