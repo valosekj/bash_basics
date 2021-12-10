@@ -41,7 +41,9 @@ for keyword in "${!tags_to_keywords[@]}";do
 
       value=$(dicom_hdr "$dcm" | grep "${tags_to_keywords[$keyword]}" | awk 'NF{ print $NF }' | sed 's:.*\/\/::g')
       # awk 'NF{ print $NF }' - get the last column; sed 's:.*\/\/::g' - remove everything before //
-      echo -e "$keyword - $value"
+      # Format output into two columns
+      printf "%-30s" "$keyword"
+      printf "%-20s\n" "$value"
 
 done
 
