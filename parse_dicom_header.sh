@@ -31,6 +31,7 @@ tags_to_keywords=(
           ["ID Image Type"]="0008 0008"
           ["Echo Time"]="0018 0081"
           ["Contrast/Bolus Agent"]="0018 0010"
+          ["Series Number"]="0020 0011"
         )
 
 # "${tags_to_keywords[@]}" to expand the values
