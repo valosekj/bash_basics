@@ -23,7 +23,6 @@ print_current_date_and_time(){
 get_unique_bvals(){
   tr ' ' '\n' < "$1" | sort -nu | uniq | tr '\n' ' '
   # first tr replaces spaces to new lines (\n), sort and uniq filter only unique values and the second tr replaces new lines back to spaces
-
 }
 
 #########################################################################
@@ -376,7 +375,7 @@ wait_then_kill()
 get_elapsed_time()
 {
 
-    if [[ $1 == "--help" ]];then
+    if [[ $1 == "" ]] || [[ $1 == "--help" ]];then
       echo "Get elapsed time based on processID (pid)"
       echo -e "USAGE:\n\tget_elapsed_time <pid>"
       echo -e "EXAMPLE:\n\tget_elapsed_time 54345"
