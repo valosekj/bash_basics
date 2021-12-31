@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #########################################################################
-# Send email when process finish
+# Send email when process(es) finish
 # USAGE:
 #    send_email_when_finish <list_of_pids> <email_filename> <refresh_time_in_sec>
 # EXMAMPLE:
@@ -27,14 +27,16 @@ if [[ $1 == "send_now" ]];then
     sleep 1
 # Print help
 elif [[ $1 == "" ]] || [[ $1 == "--help" ]];then
-    echo -e "Send email when process finish"
+    echo -e "Send email when process(es) finish"
     echo -e "USAGE:"
     echo -e "\tsend_email_when_finish <list_of_pids> <email_filename> <refresh_time_in_sec>"
     echo -e "EXMAMPLE:"
-    echo -e "\tsend_email_when_finish ${list_of_pids} dummy_email.txt"
-    echo -e "\nNB - ${list_of_pids} variable should be defined as list_of_pids=("68106" "68107")"
-    echo -e "TIP - PID(s) could be obtained by get_pid() function"
+    echo -e "\tsend_email_when_finish \${list_of_pids} dummy_email.txt"
+    echo -e "\nNB - \${list_of_pids} variable should be defined as list_of_pids=(\"68106\" \"68107\")"
+    echo -e "TIP - individual PID(s) could be obtained by get_pid() function"
     echo -e "TIP - list_of_pids can be replaced by \"send_now\" if you want to send email immediately"
+    echo -e "TIP - you can create email_filename by echo, e.g.:"
+    echo "echo -e \"To: <email_1>,<email_2>\\nSubject:My subject\\n\\nEmail body\" >> dummy_email.txt"
     exit
 else
 
