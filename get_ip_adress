@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Print hostname and IP adress to CLI
+# Print hostname and IP address to CLI
 # Jan Valosek, fMRI laboratory Olomouc, 2021
 
 hostname
