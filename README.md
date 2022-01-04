@@ -78,16 +78,15 @@ exec > >(tee -a $LOGPATH) 2>&1
 
 #### Usage in terminal/CLI
 
-You can `source` the `bash_basic_functions` repo within your `bashrc`/`zshrc` file to be able to use functions in CLI:
+You can `source` this repo within your `bashrc`/`zshrc` file to be able to use functions in CLI:
 
 ```
 # Add these lines to your /home/<your_username>/.bashrc or /home/<your_username>/.zshrc file
-source /usr/local/lib/bash_basics/bash_basic_functions.sh
-PATH="/usr/local/lib/bash_basics/:$PATH"
+source /usr/local/lib/bash_basics/config_bash.sh
 ```
 
 ## Contact: 
 
 Jan Valosek, fMRI laboratory, Olomouc, Czechia
 
-2019-2021
+2018-2022
