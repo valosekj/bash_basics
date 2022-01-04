@@ -14,18 +14,6 @@ print_current_date_and_time(){
 }
 
 #########################################################################
-# Print unique b-values from bval file
-# USAGE:
-#     get_unique_bvals sub-001_dwi.bval
-# EXAMPLE OUTPUT:
-#     0 1000 2000
-#########################################################################
-get_unique_bvals(){
-  tr ' ' '\n' < "$1" | sort -nu | uniq | tr '\n' ' '
-  # first tr replaces spaces to new lines (\n), sort and uniq filter only unique values and the second tr replaces new lines back to spaces
-}
-
-#########################################################################
 # Get subject ID (in XX-XXX-000 format) from input path
 # USAGE:
 #     get_subject_ID /home/some_user/AB-CDE/AB-CDE-111
