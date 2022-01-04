@@ -494,41 +494,6 @@ show()
 }
 
 #########################################################################
-# Function for running matlab from command line without opening MATLAB desktop
-# Explanation:
-#   https://www.mathworks.com/help/matlab/ref/matlablinux.html
-# USAGE:
-#   run_matlab "command_1,...,command_X,exit"
-# e.g.
-#   run_matlab "addpath('$MATLAB_SCRIPT'),NODDI_analysis('$subdir','$SUB'),exit"
-
-# Jan Valosek, Rene Labounek, fMRI laboratory, Olomouc.
-#########################################################################
-run_matlab()
-{
-  if [[ $(which matlab) == "" ]]; then
-      echo "Matlab was not found."
-      trap_exit
-  fi
-
-  if [[ $1 == "h" ]] || [[ $1 == "-h" ]] || [[ $1 == "--help" ]] || [[ $1 == "" ]]; then
-    echo -e "Help for function for running matlab from command line without opening MATLAB desktop.\nUSAGE:\n\trun_matlab \"command_1,...,command_X,exit\""
-    echo -e "EXAMPLE:\n\trun_matlab \"addpath('\$MATLAB_SCRIPT'),NODDI_analysis('\$subdir','\$SUB'),exit\""
-    return
-  fi
-
-  COMMAND=$1
-
-  if [[ $HOSTNAME == emperor ]];then
-     /usr/local/MATLAB/R2014b/bin/matlab -nosplash -nodisplay -nodesktop -r "$COMMAND"           #JV 11.5.18 (R2016B does not contain Image Processing Toolbox)
-  elif [[ $HOSTNAME == king ]];then
-    /usr/local/MATLAB/R2016b/bin/matlab -nosplash -nodisplay -nodesktop -r "$COMMAND"           #JV 27.5.2019 (R2018B does not contain Image Processing Toolbox)
-  else
-    matlab -nosplash -nodisplay -nodesktop -r  "$COMMAND"
-  fi
-}
-
-#########################################################################
 # Function telling to the parent process that something happened (e.g. file/binary/script does not exist)
 # Function finds parent process ID (ppid) and set user defined signal (SIGUSR1)
 # In the parent script has to be following line for catching SIGUSR1:

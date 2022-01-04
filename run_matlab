@@ -1,0 +1,65 @@
+#!/bin/bash
+
+# Function for running matlab from command line without opening MATLAB desktop
+# Explanation:
+#   https://www.mathworks.com/help/matlab/ref/matlablinux.html
+# USAGE:
+#   run_matlab "command_1,...,command_X,exit" MATLAB_VERSION
+# e.g.
+#   run_matlab "addpath('$MATLAB_SCRIPT'),my_script('$subdir','$SUB'),exit" R2017b
+
+# Jan Valosek, Rene Labounek, fMRI laboratory, Olomouc, 2018-2022.
+
+if [[ $(uname) == "Linux" ]];then
+    matlab_dir="/usr/local/MATLAB"
+    list_of_matlabs=$(ls -d ${matlab_dir}/R* | sed 's/\/usr\/local\/MATLAB\///g')
+elif [[ $(uname) == "Darwin" ]]; then
+    matlab_dir="/Applications"
+    list_of_matlabs=$(ls -d ${matlab_dir}/MATLAB_R* | sed 's/\/Applications\/MATLAB_//g')
+fi
+
+print_help()
+{
+    echo -e "Help for function for running matlab from command line without opening MATLAB desktop."
+    echo -e "Valosek, Labounek, fMRI laboratory Olomouc, 2018-2022"
+    echo -e "\nUSAGE:\n\t${0##*/} \"command_1,...,command_X,exit\" MATLAB_VERSION"
+	  echo -e "EXAMPLE:\n\t${0##*/} \"ver,exit\"\nOR"
+    echo -e "\t${0##*/} \"addpath('\$MATLAB_SCRIPT'),my_script('\$subdir','\$SUB'),exit\" R2017b"
+    echo -e "\nIf MATLAB_VERSION is not provided, the default matlab under alias matlab is run."
+    echo -e "\nAvailable MATLABs on this machine installed in ${matlab_dir}: \n${list_of_matlabs}"
+    exit
+}
+
+if [[ $1 == "h" ]] || [[ $1 == "-h" ]] || [[ $1 == "--help" ]] || [[ $1 == "" ]] || [[ $# -gt 2 ]]; then
+	print_help
+fi
+
+command=$1
+matlab_ver=$2
+
+# Run matlab under alias matlab
+if [[ $# -eq 1 ]];then
+	if [[ $(which matlab) == "" ]]; then
+	    echo "Matlab was not found. Check directory ${matlab_dir} where is MATLAB usually installed."
+	    exit
+	fi
+
+	matlab -nosplash -nodisplay -nodesktop -r  "$command"
+
+# Run specific matlab version passes as the second argument
+else
+
+  if [[ $(uname) == "Linux" ]];then
+      matlab_bin="${matlab_dir}/${matlab_ver}/bin/matlab"
+  elif [[ $(uname) == "Darwin" ]]; then
+      matlab_bin="${matlab_dir}/MATLAB_${matlab_ver}.app/Contents/MacOS/MATLAB"
+  fi
+
+	if [[ ! -f ${matlab_bin} ]]; then
+      echo -e "ERROR: Matlab in ${matlab_bin} not found.\n"
+		  print_help
+	fi
+
+	${matlab_bin} -nosplash -nodisplay -nodesktop -r  "$command"
+
+fi
