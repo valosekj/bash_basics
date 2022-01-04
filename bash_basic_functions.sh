@@ -546,22 +546,3 @@ trap_exit()
         sleep 1;kill -SIGUSR1 `ps $$ -o ppid=`#;exit         # Find parent process ID (ppid) and set user defined signal (SIGUSR1)
     fi
 }
-
-#########################################################################
-# Function which creates dummy_email.txt file
-# USAGE:
-#     create_email <process_name> <list_of_emails>
-#
-# TIP - list of emails should look like: <email1>,<email2>
-#
-# TIP - created email can be then sent by send_email_when_finish.sh script
-#########################################################################
-create_email()
-{
-  # Create the email into dummy txt file
-  touch dummy_email_${1}.txt
-  time_and_date=$(date "+%T on %Y-%m-%d")
-  echo -e "To:${2}" > dummy_email_${1}.txt
-  echo -e "Subject:$(get_subject_ID ./) - ${1} finished at ${time_and_date}" >> dummy_email_${1}.txt
-  echo -e "\nThis email was generated automatically." >> dummy_email_${1}.txt
-}
