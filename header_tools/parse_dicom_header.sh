@@ -9,7 +9,8 @@
 # DICOM lookup - http://dicomlookup.com/default.asp
 
 if [[ $# -eq 0 ]] || [[ $1 =~ "-h" ]];then
-    echo -e "USAGE:\n\t${0##*/} <dicom_file>"
+    echo "Parse dicom header and fetch specific tags"
+    echo -e "\nUSAGE:\n\t${0##*/} <dicom_file>"
     exit
 else
     dcm=${1}
