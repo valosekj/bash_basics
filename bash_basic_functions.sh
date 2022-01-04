@@ -50,30 +50,6 @@ get_study_ID(){
 }
 
 #########################################################################
-# Fetch total readout time for diffusion image from its .json file
-# You can get .json file by running dcm2niix on your dMRI data
-# It is useful for example for FSL's topup config file
-# https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/topup/TopupUsersGuide#A--datain
-# USAGE:
-#     get_readout dwi.json
-# EXAMPLE OUTPUT:
-#     0.0768363
-#########################################################################
-get_readout(){
-
-  if [[ $1 == "" ]] || [[ $1 == "--help" ]];then
-  	echo "Fetch total readout time for diffusion image from its .json file. TIP - .json file can be obtained by dcm2niix"
-  	echo -e "USAGE:\n\tget_readout <dwi_file.json>"
-  	echo -e "EXAMPLE:\n\tget_readout <dwi.json>"
-  	return
-  fi
-
-  readout=$(grep "TotalReadoutTime" ${1} | awk '{print $2}' | sed 's/,//')
-  echo "${readout}"
-
-}
-
-#########################################################################
 # Monitor processes run by condor (e.g. bedpostx_condor)
 # Print number of run processed in running / done format
 # Refresh is done every 30s

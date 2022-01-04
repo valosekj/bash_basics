@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Fetch total readout time for DWI image from its .json file and print it to CLI
+# You can get .json file by running dcm2niix on your dMRI data
+# It is useful for example for FSL's topup config file
+# https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/topup/TopupUsersGuide#A--datain
+# USAGE:
+#     get_readout dwi.json
+# EXAMPLE OUTPUT:
+#     0.0768363
+
+if [[ $# -eq 0 ]] || [[ $1 =~ "-h" ]];then
+  echo "Fetch total readout time for DWI image from its .json file and print it to CLI."
+  echo "TIP - .json file can be obtained using dcm2niix tool."
+  echo -e "\nUSAGE:\n\t${0##*/} <dwi_file.json>"
+  echo -e "EXAMPLE:\n\t${0##*/} sub-001_dwi.json"
+  echo -e "EXAMPLE OUTPUT:\n\t0.0768363"
+  exit
+fi
+
+readout=$(grep "TotalReadoutTime" ${1} | awk '{print $2}' | sed 's/,//')
+echo "${readout}"
