@@ -14,7 +14,8 @@ if [[ $# -eq 0 ]] || [[ $1 =~ "-h" ]];then
     exit
 fi
 
-tr ' ' '\n' < "$1" | sort -nu | uniq | tr '\n' ' '
+unique_bvals=$(tr ' ' '\n' < "$1" | sort -nu | uniq | tr '\n' ' ')
+echo "${unique_bvals}"
 # 1. the first tr replaces spaces to new lines (\n)
 # 2. sort and uniq filter only unique values
 # 3. the second tr replaces new lines back to spaces
