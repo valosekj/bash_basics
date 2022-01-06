@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Create a text file for FSL's topup function
+# Create a config text file and merge b0 images with opposite PE
+# Outputs can be used for FSL's topup function
 # The text file will have 4 columns and number of rows corresponding to total
 # number of b0 volumes
 # See for details:
@@ -9,14 +10,14 @@
 # Jan Valosek, fMRI laboratory Olomouc, Czechia, 2021
 
 if [[ $# -eq 0 ]] || [[ $1 =~ "-h" ]];then
-  echo "Create a text file for FSL's topup function from input b0 files."
+  echo "Create a config text file and merge b0 images with opposite PE. Outputs can be used for FSL's topup function."
   echo "The text file will have 4 columns and number of rows corresponding to total number of b0 volumes."
-  echo -e "\nNOTE:\n\t- script currently supports only AP-PA or PA-AP phase encoding\n\t- if you do not know the readout time, set it to 0.1"
-  echo "Why 0.1? See - https://www.jiscmail.ac.uk/cgi-bin/webadmin?A2=fsl;d552bccb.1312"
-  echo -e "For details about topup file see - https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/topup/TopupUsersGuide#A--datain"
+  echo -e "\nNOTES:\n\t- script currently supports only AP-PA or PA-AP phase encoding\n\t- if you do not know the readout time, set it to 0.1"
+  echo -e "\tWhy 0.1? See - https://www.jiscmail.ac.uk/cgi-bin/webadmin?A2=fsl;d552bccb.1312"
+  echo -e "\tFor details about topup file see - https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/topup/TopupUsersGuide#A--datain"
   echo -e "\nUSAGE:\n\t${0##*/} <b0_AP> <b0_PA> <phase_endocing> <readout_time> <full_output_path>"
   echo -e "EXAMPLE:\n\t${0##*/} dmri_AP_b0.nii.gz dmri_PA_b0.nii.gz AP-PA 0.076 /home/valosek/sub-001/dwi/topup"
-  echo -e "\nTIP - you can get <readout_time> by get_readout function, like this:"
+  echo -e "\nTIP - you can get <readout_time> from .json file by get_readout function, like this:"
   echo -e "\t${0##*/} dmri_AP_b0.nii.gz dmri_PA_b0.nii.gz AP-PA \$(get_readout dmri_AP.json)"
   echo -e "TIP - you can extract b0 volumes from 4D DWI dataset using separate_b0_and_dwi function"
   exit
