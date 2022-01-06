@@ -8,7 +8,7 @@
 # Then, the text file will look like:
 #       1 1 1 2 2 2 3 3 3
 
-# NOTE - if two same DWI acqusition only with oposite PE are acquired, merge bval files first, for example by merge_bval_files
+# NOTE - if two same DWI acquisitions only with opposite PE are acquired, merge bval files first, for example by merge_bval_files
 # For details see last question here - https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/eddy/Faq#What_does_it_mean_if_I_have_more_than_two_rows_in_my_--acqp_file.3F
 
 # Jan Valosek, fMRI laboratory Olomouc, Czechia, 2021
@@ -19,8 +19,9 @@ if [[ $# -eq 0 ]] || [[ $1 =~ "-h" ]];then
     echo -e "The text file carries information about positions of b=0 scans which eddy uses for artifacts correction."
     echo -e "For example, if we have following bval file:\n\t0 1000 1000 0 3000 3000 0 1000 1000"
     echo -e "Then, the text file will look like:\n\t1 1 1 2 2 2 3 3 3"
-    echo -e "NOTE - if two same DWI acqusition only with oposite PE are acquired, merge bval files first, for example by merge_bval_files function"
-    echo -e "\nUSAGE:\n\t${0##*/} <bval_file>\nExample:\n\t${0##*/} dti_merged.bval"
+    echo -e "NOTE - if two same DWI acquisitions only with opposite PE are acquired, merge bval files first, for example by merge_bval_bvec_files function"
+    echo -e "\nUSAGE:\n\t${0##*/} <bval_file>"
+    echo -e "EXAMPLE:\n\t${0##*/} dti_merged.bval"
     exit
 fi
 
@@ -50,3 +51,4 @@ done
 echo ${output} > ${output_file_name}
 
 echo -e "Created ${output_file_name}:\n$(cat ${output_file_name})"
+echo -e "${0##*/} finished\n"
