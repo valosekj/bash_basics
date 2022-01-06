@@ -30,6 +30,8 @@ source /usr/local/lib/bash_basics/bash_basic_functions.sh
 # Immediately exit if error
 set -e -o pipefail
 
+echo -e "Invoked:\t ${0} "$@""
+
 # Global variables
 output_file_name="topup.txt"    # filename for output text file
 default_path=$PWD                # set defaul output path to the current path
