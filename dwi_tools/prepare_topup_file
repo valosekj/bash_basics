@@ -11,15 +11,18 @@
 if [[ $# -eq 0 ]] || [[ $1 =~ "-h" ]];then
   echo "Create a text file for FSL's topup function from input b0 files."
   echo "The text file will have 4 columns and number of rows corresponding to total number of b0 volumes."
-  echo -e "\nNOTE:\n\t- script currently supports only AP-PA or PA-AP phase encoding\n\t- default readout time is 0.1, if not passed othwerwise!"
+  echo -e "\nNOTE:\n\t- script currently supports only AP-PA or PA-AP phase encoding\n\t- if you do not know the readout time, set it to 0.1"
   echo "Why 0.1? See - https://www.jiscmail.ac.uk/cgi-bin/webadmin?A2=fsl;d552bccb.1312"
   echo -e "For details about topup file see - https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/topup/TopupUsersGuide#A--datain"
-  echo -e "\nUSAGE:\n\t${0##*/} <b0_AP> <b0_PA> <phase_endocing> <readout_time>\nExample:\n\t${0##*/} dmri_AP_b0.nii.gz dmri_PA_b0.nii.gz AP-PA 0.076"
+  echo -e "\nUSAGE:\n\t${0##*/} <b0_AP> <b0_PA> <phase_endocing> <readout_time> <full_output_path>\nExample:\n\t${0##*/} dmri_AP_b0.nii.gz dmri_PA_b0.nii.gz AP-PA 0.076 /home/valosek/sub-001/dwi/topup"
   echo -e "\nTIP - you can get <readout_time> by get_readout function, like this:"
   echo -e "\t${0##*/} dmri_AP_b0.nii.gz dmri_PA_b0.nii.gz AP-PA \$(get_readout dmri_AP.json)"
   echo -e "TIP - you can extract b0 volumes from 4D DWI dataset using separate_b0_and_dwi function"
   exit
 fi
+
+# Load some useful functions
+source /usr/local/lib/bash_basics/bash_basic_functions.sh
 
 # Uncomment for debug
 #set -x
@@ -29,7 +32,8 @@ set -e -o pipefail
 
 # Global variables
 output_file_name="topup.txt"    # filename for output text file
-readout=0.1                     # default readout time, if not passed othwerwise - see https://www.jiscmail.ac.uk/cgi-bin/webadmin?A2=fsl;d552bccb.1312
+default_path=$PWD                # set defaul output path to the current path
+b0_merged="dti_merged.nii.gz"   # filename for merged AP and PA nii
 first_input_file=${1/.nii*/}      # Strip out .nii or .nii.gz sufix if passed
 second_input_file=${2/.nii*/}      # Strip out .nii or .nii.gz sufix if passed
 first_size="$(fslval ${first_input_file}.nii.gz dim4)"   # number of volumes in the first image
@@ -59,31 +63,58 @@ fi
 # Script starts here
 # ----
 
+check_input f "${first_input_file}.nii.gz" "${second_input_file}.nii.gz"
+
 echo "First input b0 file: ${first_input_file}.nii.gz"
 echo "Second input b0 file: ${second_input_file}.nii.gz"
 echo "Number of volumes in the first file: ${first_size}"
 echo "Number of volumes in the second file: ${second_size}"
 echo "Phase encoding: ${3}"
 
-# Check if total readout time was passed
-if [[ ${4} == "" ]]; then
-    echo "Total readout time not passed, using default: ${readout}"
+# Total readout time was passed
+readout=${4}
+echo "Total readout time = ${readout} passed, using it."
+
+# Output path
+if [[ ${5} == "" ]]; then
+    output_path=${default_path}
+    echo "WARNING: Output path not passed. Using ${default_path}."
 else
-    readout=${4}
-    echo "Total readout time = ${readout} passed, using it."
+    output_path=${5}
+    check_input dc "$outpath"   # Check if directory exists, if not create it
 fi
 
+#####
+# create topup.txt
+#####
+
 # Create empty file
-touch ${output_file_name}
+if [[ -f ${output_path}/${output_file_name} ]]; then
+    mv ${output_path}/${output_file_name} ${output_path}/${output_file_name}.backup
+fi
+
+touch ${output_path}/${output_file_name}
 
 # Add number of AP rows corresponding to number of volumes in b0 AP file
 for index in $(seq ${first_size});do
-    echo "0 ${first_sign}1 0 ${readout}" >> ${output_file_name}
+    echo "0 ${first_sign}1 0 ${readout}" >> ${output_path}/${output_file_name}
 done
 
 # Add number of PA rows corresponding to number of volumes in b0 PA file
 for index in $(seq ${second_size});do
-    echo "0 ${second_sign}1 0 ${readout}" >> ${output_file_name}
+    echo "0 ${second_sign}1 0 ${readout}" >> ${output_path}/${output_file_name}
 done
 
-echo -e "Created ${output_file_name}:\n$(cat ${output_file_name})"
+echo -e "Created ${output_path}/${output_file_name}:\n$(cat ${output_path}/${output_file_name})"
+
+#####
+# merge b0 images
+#####
+if [[ ${3} == "AP-PA" ]];then
+    fslmerge -t ${output_path}/${b0_merged} ${first_input_file}.nii.gz ${second_input_file}.nii.gz
+elif [[ ${3} == "PA-AP" ]];then
+    fslmerge -t ${output_path}/${b0_merged} ${second_input_file}.nii.gz ${first_input_file}.nii.gz
+fi
+
+echo -e "Created ${output_path}/${b0_merged}."
+echo -e "${0##*/} finished\n"
