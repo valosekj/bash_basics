@@ -1,6 +1,6 @@
 ## Information
 
-Bundle of bash functions used in routine work.
+Bundle of bash, python and matlab scripts and functions used in routine work.
 
 
 ### General functions:
@@ -13,7 +13,7 @@ Used within another scripts for checking input, running commands, logging etc.
  
  `show` - script for printing messeage or command's output in various ways (e.g. like ERROR in red color)
  
- ### Functions for process monitoring:
+ ### Functions for monitoring of running processes:
  
 Used for monitoring of running processes.
  
@@ -46,6 +46,15 @@ Used for manipulation with diffusion-weighted MRI data (dMRI/DWI)
  `merge_bval_bvec_files` - merge bval/bvec files into one
   
  `parse_SliceTiming_from_json.m` - matlab function for fetching of SliceTiming parameter from .json (used for --slspec flag of FSL's eddy)
+ 
+ `display_bvecs.m` - matlab function for simple 3D visualisation of gradient vectors based on bvec file
+
+### Functions for working with MRI data headers:
+
+ `parse_dicom_header.sh` - parse dicom header and fetch specific tags (this script requires [AFNI dicom_hdr](https://afni.nimh.nih.gov/pub/dist/doc/program_help/dicom_hdr.html) function)
+ 
+ `compare_nifti_headers.sh` - compare headers of two input nifti files
+    
 
 ### Some other functions/scripts:
 
@@ -67,10 +76,10 @@ git clone https://github.com/valosekj/bash_basics.git
 
 Note - I recommend to clone the repo into `/usr/local/lib` directory
 
-#### Usage inside script - include following lines in your script:
+#### Usage inside scripts - include following lines into your script:
 
 ```
-source <path_to_cloned_repo>/bash_basics/bash_basic_functions.sh
+source <path_to_cloned_repo>/bash_basics/config_bash.sh
 
 export LOGPATH=./log.txt
 exec > >(tee -a $LOGPATH) 2>&1
@@ -81,8 +90,8 @@ exec > >(tee -a $LOGPATH) 2>&1
 You can `source` this repo within your `bashrc`/`zshrc` file to be able to use functions in CLI:
 
 ```
-# Add these lines to your /home/<your_username>/.bashrc or /home/<your_username>/.zshrc file
-source /usr/local/lib/bash_basics/config_bash.sh
+# Add following lines to your /home/<your_username>/.bashrc or /home/<your_username>/.zshrc file
+source <path_to_cloned_repo>/bash_basics/config_bash.sh
 ```
 
 ## Contact: 

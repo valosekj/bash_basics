@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Compare nifti headers of two files
+# Compare headers of two input nifti files
 # Jan Valosek
 
 if [[ $1 == "" ]] || [[ $1 == "--help" ]];then
