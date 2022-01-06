@@ -1,9 +1,9 @@
-## Information
+# Information
 
 Bundle of bash, python and matlab scripts and functions used in routine work.
 
 
-### General functions:
+## General functions:
 
 Used within another scripts for checking input, running commands, logging etc.
  
@@ -13,7 +13,7 @@ Used within another scripts for checking input, running commands, logging etc.
  
  `show` - script for printing messeage or command's output in various ways (e.g. like ERROR in red color)
  
- ### Functions for monitoring of running processes:
+## Functions for monitoring of running processes:
  
 Used for monitoring of running processes.
  
@@ -29,7 +29,7 @@ Used for monitoring of running processes.
  
  `get_pid` - get pid based on process name
  
-### Functions for working with DWI data:
+## Functions for working with DWI data:
 
 Used for manipulation with diffusion-weighted MRI data (dMRI/DWI)
 
@@ -49,14 +49,14 @@ Used for manipulation with diffusion-weighted MRI data (dMRI/DWI)
  
  `display_bvecs.m` - matlab function for simple 3D visualisation of gradient vectors based on bvec file
 
-### Functions for working with MRI data headers:
+## Functions for working with MRI data headers:
 
  `parse_dicom_header.sh` - parse dicom header and fetch specific tags (this script requires [AFNI dicom_hdr](https://afni.nimh.nih.gov/pub/dist/doc/program_help/dicom_hdr.html) function)
  
  `compare_nifti_headers.sh` - compare headers of two input nifti files
     
 
-### Some other functions/scripts:
+## Some other functions/scripts:
 
  `get_ip_adress` - print hostname and IP adress to CLI
  
@@ -64,11 +64,11 @@ Used for manipulation with diffusion-weighted MRI data (dMRI/DWI)
   
  `send_email_when_finish` - send email when process finish
  
- ...
+ and some others, see `other_tools` folder
 
-## Usage:
+# Usage:
 
-#### Clone (download) repo:
+## Clone (download) repo:
 
 ```
 git clone https://github.com/valosekj/bash_basics.git
@@ -76,7 +76,9 @@ git clone https://github.com/valosekj/bash_basics.git
 
 Note - I recommend to clone the repo into `/usr/local/lib` directory
 
-#### Usage inside scripts - include following lines into your script:
+## Usage inside scripts
+
+Include following lines into your script:
 
 ```
 source <path_to_cloned_repo>/bash_basics/config_bash.sh
@@ -85,7 +87,7 @@ export LOGPATH=./log.txt
 exec > >(tee -a $LOGPATH) 2>&1
 ```
 
-#### Usage in terminal/CLI
+## Usage in terminal/CLI
 
 You can `source` this repo within your `bashrc`/`zshrc` file to be able to use functions in CLI:
 
@@ -94,7 +96,7 @@ You can `source` this repo within your `bashrc`/`zshrc` file to be able to use f
 source <path_to_cloned_repo>/bash_basics/config_bash.sh
 ```
 
-## Contact: 
+# Contact: 
 
 Jan Valosek, fMRI laboratory, Olomouc, Czechia
 
