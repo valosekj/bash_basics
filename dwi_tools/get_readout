@@ -1,6 +1,10 @@
 #!/bin/bash
 
 # Fetch total readout time for DWI image from its .json file and print it to CLI
+#
+# The total readout time (FSL definition) is the time from the center of the first echo to the center of the last)
+# Total readout time (FSL) = (number of echoes - 1) * echo spacing
+#
 # You can get .json file by running dcm2niix on your dMRI data
 # It is useful for example for FSL's topup config file
 # https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/topup/TopupUsersGuide#A--datain

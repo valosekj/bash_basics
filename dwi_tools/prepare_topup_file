@@ -15,8 +15,9 @@ if [[ $# -eq 0 ]] || [[ $1 =~ "-h" ]];then
   echo "Why 0.1? See - https://www.jiscmail.ac.uk/cgi-bin/webadmin?A2=fsl;d552bccb.1312"
   echo -e "For details about topup file see - https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/topup/TopupUsersGuide#A--datain"
   echo -e "\nUSAGE:\n\t${0##*/} <b0_AP> <b0_PA> <phase_endocing> <readout_time>\nExample:\n\t${0##*/} dmri_AP_b0.nii.gz dmri_PA_b0.nii.gz AP-PA 0.076"
-  echo -e "\nTIP: you can get <readout_time> by get_readout function, like this:"
+  echo -e "\nTIP - you can get <readout_time> by get_readout function, like this:"
   echo -e "\t${0##*/} dmri_AP_b0.nii.gz dmri_PA_b0.nii.gz AP-PA \$(get_readout dmri_AP.json)"
+  echo -e "TIP - you can extract b0 volumes from 4D DWI dataset using separate_b0_and_dwi function"
   exit
 fi
 
