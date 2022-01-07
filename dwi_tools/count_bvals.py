@@ -13,6 +13,13 @@ import sys
 
 
 def main():
+
+    # Print help and exit if no argument or only one was passed
+    if len(sys.argv) < 3:
+        print('Count number of DWI volumes acquired with given b-value.')
+        print('USAGE:\n\t{} <bval_file> <bvalue>'.format(sys.argv[0].split("/")[-1]))
+        sys.exit()
+
     # Fetch input args
     filename = sys.argv[1]
     bval_to_count = sys.argv[2]
