@@ -11,6 +11,10 @@
 # NOTE - if two same DWI acquisitions only with opposite PE are acquired, merge bval files first, for example by merge_bval_files
 # For details see last question here - https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/eddy/Faq#What_does_it_mean_if_I_have_more_than_two_rows_in_my_--acqp_file.3F
 
+# NOTE from FSL about "--imain" input file for eddy:
+# Should specify a 4D image file with all your images acquired as part of a diffusion protocol. I.e. it should contain both your dwis and your b=0 images.
+# If you have collected your data with reversed phase-encode blips, data for both blip-directions should be in this file.
+
 # Jan Valosek, fMRI laboratory Olomouc, Czechia, 2021
 
 if [[ $# -eq 0 ]] || [[ $1 =~ "-h" ]];then
