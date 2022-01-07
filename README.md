@@ -42,12 +42,39 @@ Used for manipulation with diffusion-weighted MRI data (dMRI/DWI)
  `count_bvals.py` - python script for counting number of DWI volumes acquired with given b-value
  
  `separate_b0_and_dwi` - separate b0 and DWI volumes from 4D diffusion image
+ 
+ `create_dummy_b0_bval_and_bvec` - create dummy bval and bvec files with zeros
   
  `merge_bval_bvec_files` - merge bval/bvec files into one
   
  `parse_SliceTiming_from_json.m` - matlab function for fetching of SliceTiming parameter from .json (used for --slspec flag of FSL's eddy)
  
  `display_bvecs.m` - matlab function for simple 3D visualisation of gradient vectors based on bvec file
+ 
+ Example dMRI analysis with aforementioned scripts for complete AP acquisition and PA acquisition with b0 only can look like:
+ 
+ ```console
+# Split input AP DWI 4D volume and get _b0 and _dwi files
+separate_b0_and_dwi dwi_AP.nii.gz
+# Fetch total readout time    
+readout_time=$(get_readout dwi_AP.json)
+# Create txt topup config file and merge AP and PA b0 files
+prepare_topup_files dwi_AP_b0.nii.gz dwi_PA.nii.gz "AP-PA" ${readout_time}
+# Run FSL's topup
+topup ...
+
+# Merge original complete AP 4D DWI and PA 4D DWI b0
+fslmerge -t dwi_merged.nii.gz dwi_AP.nii.gz dwi_PA.nii.gz
+# Create .bval and .bvec files for PA b0 DWI
+create_dummy_b0_bval_and_bvec dwi_PA.nii.gz
+# Merge bval and bvec files for AP and PA acquisitions 
+merge_bval_bvec_files dwi_AP.bval dwi_PA.bval
+merge_bval_bvec_files dwi_AP.bvec dwi_PA.bvec
+# Create index.txt file for eddy
+prepare_eddy_file bvals_merged     
+# Run FSL's eddy
+eddy ...
+ ```
 
 ## Functions for working with MRI data headers:
 
