@@ -17,6 +17,9 @@
 
 # Jan Valosek, fMRI laboratory Olomouc, Czechia, 2021
 
+# Load some useful functions
+source /usr/local/lib/bash_basics/bash_basic_functions.sh
+
 if [[ $# -eq 0 ]] || [[ $1 =~ "-h" ]];then
     echo -e "Create a text file for FSL's eddy function."
     echo -e "The text file tells eddy which line(s) in the topup.txt file is/are relevant for the data passed into eddy."
@@ -24,8 +27,8 @@ if [[ $# -eq 0 ]] || [[ $1 =~ "-h" ]];then
     echo -e "For example, if we have following bval file:\n\t0 1000 1000 0 3000 3000 0 1000 1000"
     echo -e "Then, the text file will look like:\n\t1 1 1 2 2 2 3 3 3"
     echo -e "NOTE - if two same DWI acquisitions only with opposite PE are acquired, merge bval files first, for example by merge_bval_bvec_files function"
-    echo -e "\nUSAGE:\n\t${0##*/} <bval_file>"
-    echo -e "EXAMPLE:\n\t${0##*/} dti_merged.bval"
+    echo -e "\nUSAGE:\n\t${0##*/} <bval_file> <full_output_path>"
+    echo -e "EXAMPLE:\n\t${0##*/} dti_merged.bval /home/valosek/sub-001/dwi/eddy"
     exit
 fi
 
@@ -35,11 +38,23 @@ fi
 # Immediately exit if error
 set -e -o pipefail
 
+echo -e "Invoked:\t ${0} "$@""
+
 # Global variables
 output_file_name="index.txt"    # filename for output text file
 input_file=${1}
 output=""
 b0_index=0
+
+default_path=$PWD                # set defaul output path to the current path
+# Output path
+if [[ ${2} == "" ]]; then
+    output_path=${default_path}
+    echo "WARNING: Output path not passed. Using ${default_path}."
+else
+    output_path=${2}
+    check_input dc "$outpath"   # Check if directory exists, if not create it
+fi
 
 # Check if input file contains .bval suffix (bval or bvals)
 if [[ ! ${input_file#*.} =~ "bval" ]];then echo "ERROR: Input file must be a text file containing b-values with .bval or .bvals suffix.";exit;fi
@@ -52,7 +67,7 @@ for bval in $(cat ${input_file});do
     output="$output $b0_index";
 done
 # save output variable into file
-echo ${output} > ${output_file_name}
+echo ${output} > ${output_path}/${output_file_name}
 
-echo -e "Created ${output_file_name}:\n$(cat ${output_file_name})"
+echo -e "Created ${output_path}/${output_file_name}:\n$(cat ${output_path}/${output_file_name})"
 echo -e "${0##*/} finished\n"
