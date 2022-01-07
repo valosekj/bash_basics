@@ -53,7 +53,7 @@ Used for manipulation with diffusion-weighted MRI data (dMRI/DWI)
  
  Example dMRI analysis with aforementioned scripts for complete AP acquisition and PA acquisition with b0 only can look like:
  
- ```console
+ ```
 # Split input AP DWI 4D volume and get _b0 and _dwi files
 separate_b0_and_dwi dwi_AP.nii.gz
 # Fetch total readout time    
@@ -74,6 +74,8 @@ merge_bval_bvec_files dwi_AP.bvec dwi_PA.bvec
 prepare_eddy_file bvals_merged     
 # Run FSL's eddy
 eddy ...
+
+# At this moment, data are ready for diffusion model fitting (dtifit, bedpostx, ...)
  ```
 
 ## Functions for working with MRI data headers:
