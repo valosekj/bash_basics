@@ -7,8 +7,12 @@
 # EXAMPLE:
 #     create_email flirt <email1>,<email2>
 
+# Load some useful functions
+source /usr/local/lib/bash_basics/bash_basic_functions.sh
+
 if [[ $# -eq 0 ]] || [[ $1 =~ "-h" ]];then
     echo "Create dummy email, which can be then sent by send_email_when_finish.sh script."
+    echo "Dummy email is saved as dummy_email_<process_name>.txt"
     echo -e "\nUSAGE:\n\t${0##*/} <process_name> <list_of_emails>"
     echo -e "EXAMPLE:\n\t${0##*/} fnirt <email1>,<email2>"
     exit
