@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Print unique b-values from input bval file
+# USAGE:
+#     get_unique_bvals sub-001_dwi.bval
+# EXAMPLE OUTPUT:
+#     0 1000 2000
+
+if [[ $# -eq 0 ]] || [[ $1 =~ "-h" ]];then
+    echo -e "Print unique b-values from bval file."
+    echo -e "\nUSAGE:\n\t${0##*/} <bval_file>"
+    echo -e "EXAMPLE:\n\t${0##*/} sub-001_dwi.bval"
+    echo -e "EXAMPLE OUTPUT:\n\t0 1000 2000"
+    exit
+fi
+
+unique_bvals=$(tr ' ' '\n' < "$1" | sort -nu | uniq | tr '\n' ' ')
+echo "${unique_bvals}"
+# 1. the first tr replaces spaces to new lines (\n)
+# 2. sort and uniq filter only unique values
+# 3. the second tr replaces new lines back to spaces

@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# If two same DWI acqusition only with oposite PE are acquired, this script merges
+# bval/bvec files into one. Outputs can be then used for eddy function.
+
+# Jan Valosek, fMRI laboratory Olomouc, Czechia, 2021
+
+# Load some useful functions
+source /usr/local/lib/bash_basics/bash_basic_functions.sh
+
+# Uncomment for debug
+#set -x
+
+# Immediately exit if error
+set -e -o pipefail
+
+if [[ $# -eq 0 ]] || [[ $1 =~ "-h" ]];then
+    echo "Merge two bval/bvec files into one."
+    echo -e "USAGE:\n\t${0##*/} <first bval/bvec file> <second bval/bvec file> <full_output_path>"
+    echo -e "EXAMPLE:\n\t${0##*/} dti_AP.bval dti_PA.bval /home/valosek/sub-001/dwi/eddy"
+    echo -e "\t${0##*/} dti_AP.bvec dti_PA.bvec /home/valosek/sub-001/dwi/eddy"
+    exit
+fi
+
+echo ${separation_line}
+echo -e "Invoked:\t ${0} "$@""
+
+# Get suffix (bval or bvec)
+suffix=${1#*.}
+output_file_name="${suffix}s_merged"
+
+# Output path
+default_path=$PWD                # set defaul output path to the current path
+if [[ ${3} == "" ]]; then
+    output_path=${default_path}
+    echo "WARNING: Output path not passed. Using ${default_path}."
+else
+    output_path=${3}
+    check_input dc "$output_path"   # Check if directory exists, if not create it
+fi
+
+paste -d ' ' ${1} ${2} > ${output_path}/${output_file_name}
+
+echo -e "Created ${output_path}/${output_file_name}:\n$(cat ${output_path}/${output_file_name})"
+echo -e "${0##*/} finished\n"

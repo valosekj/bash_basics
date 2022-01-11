@@ -24,6 +24,9 @@ main()
         print_help
     fi
 
+    echo ${separation_line}
+    echo -e "Invoked:\t ${0} "$@""
+
     # Global variables
     input_image=${1/.nii*/}     # Strip out .nii or .nii.gz sufix if passed
     bvalmin=10                  # b-value threshold
@@ -72,12 +75,11 @@ identify_bvalues()
         done
     fi
     echo "Threshold for b0 is set to ${bvalmin} s/mm2."
-    echo ""
 
     # Check if .json file for AP .nii.gz file exists, if so, fetch total readout time from it
     # TIP - you can get .json file by running dcm2niix on your DICOM images
     if [[ -f ${input_image}.json ]]; then
-        echo "Total readout time is: (use it for topup config file)"
+        echo "Total readout time is (use it for topup config file): "
         get_readout ${input_image}.json
     fi
 
@@ -123,7 +125,7 @@ create_b0_and_dwi()
     # Remove individual 3D volumes created by fslsplit command
     rm vol*.nii.gz
 
-    echo "${0##*/} finished"
+    echo -e "${0##*/} finished\n"
 }
 
 main "$@"

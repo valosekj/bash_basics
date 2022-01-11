@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Compare nifti headers of two files
+# Compare headers of two input nifti files
 # Jan Valosek
 
 if [[ $1 == "" ]] || [[ $1 == "--help" ]];then
   echo "Compare nifti header of two files"
-  echo -e "USAGE:\n\tcompare_nifti_headers.sh <file1> <file2>"
-  echo -e "EXAMPLE:\n\tcompare_nifti_headers.sh T1_run-01.nii.gz T1_run-02.nii.gz"
+  echo -e "\nUSAGE:\n\t${0##*/} <file1> <file2>"
+  echo -e "EXAMPLE:\n\t${0##*/} T1_run-01.nii.gz T1_run-02.nii.gz"
   exit
 fi
 

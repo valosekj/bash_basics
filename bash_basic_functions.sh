@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export separation_line="-----------------------------------------------------------------------------------------------"
+
 # This script contains some bash functions widely used for analysis
 # Jan Valosek, fMRI laboratory Olomouc, Czech Republic, 2018-2021
 # Thanks to Pavel Hok and Rene Labounek for contribution on some parts of the code
@@ -11,18 +13,6 @@
 #########################################################################
 print_current_date_and_time(){
   date +'%x %X'
-}
-
-#########################################################################
-# Print unique b-values from bval file
-# USAGE:
-#     get_unique_bvals sub-001_dwi.bval
-# EXAMPLE OUTPUT:
-#     0 1000 2000
-#########################################################################
-get_unique_bvals(){
-  tr ' ' '\n' < "$1" | sort -nu | uniq | tr '\n' ' '
-  # first tr replaces spaces to new lines (\n), sort and uniq filter only unique values and the second tr replaces new lines back to spaces
 }
 
 #########################################################################
@@ -59,30 +49,6 @@ get_study_ID(){
     fi
 
     echo $current_path | sed -E 's/.*([A-Z]{2}-[A-Z]{3}).*/\1/'
-}
-
-#########################################################################
-# Fetch total readout time for diffusion image from its .json file
-# You can get .json file by running dcm2niix on your dMRI data
-# It is useful for example for FSL's topup config file
-# https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/topup/TopupUsersGuide#A--datain
-# USAGE:
-#     get_readout dwi.json
-# EXAMPLE OUTPUT:
-#     0.0768363
-#########################################################################
-get_readout(){
-
-  if [[ $1 == "" ]] || [[ $1 == "--help" ]];then
-  	echo "Fetch total readout time for diffusion image from its .json file. TIP - .json file can be obtained by dcm2niix"
-  	echo -e "USAGE:\n\tget_readout <dwi_file.json>"
-  	echo -e "EXAMPLE:\n\tget_readout <dwi.json>"
-  	return
-  fi
-
-  readout=$(grep "TotalReadoutTime" ${1} | awk '{print $2}' | sed 's/,//')
-  echo "${readout}"
-
 }
 
 #########################################################################
@@ -530,41 +496,6 @@ show()
 }
 
 #########################################################################
-# Function for running matlab from command line without opening MATLAB desktop
-# Explanation:
-#   https://www.mathworks.com/help/matlab/ref/matlablinux.html
-# USAGE:
-#   run_matlab "command_1,...,command_X,exit"
-# e.g.
-#   run_matlab "addpath('$MATLAB_SCRIPT'),NODDI_analysis('$subdir','$SUB'),exit"
-
-# Jan Valosek, Rene Labounek, fMRI laboratory, Olomouc.
-#########################################################################
-run_matlab()
-{
-  if [[ $(which matlab) == "" ]]; then
-      echo "Matlab was not found."
-      trap_exit
-  fi
-
-  if [[ $1 == "h" ]] || [[ $1 == "-h" ]] || [[ $1 == "--help" ]] || [[ $1 == "" ]]; then
-    echo -e "Help for function for running matlab from command line without opening MATLAB desktop.\nUSAGE:\n\trun_matlab \"command_1,...,command_X,exit\""
-    echo -e "EXAMPLE:\n\trun_matlab \"addpath('\$MATLAB_SCRIPT'),NODDI_analysis('\$subdir','\$SUB'),exit\""
-    return
-  fi
-
-  COMMAND=$1
-
-  if [[ $HOSTNAME == emperor ]];then
-     /usr/local/MATLAB/R2014b/bin/matlab -nosplash -nodisplay -nodesktop -r "$COMMAND"           #JV 11.5.18 (R2016B does not contain Image Processing Toolbox)
-  elif [[ $HOSTNAME == king ]];then
-    /usr/local/MATLAB/R2016b/bin/matlab -nosplash -nodisplay -nodesktop -r "$COMMAND"           #JV 27.5.2019 (R2018B does not contain Image Processing Toolbox)
-  else
-    matlab -nosplash -nodisplay -nodesktop -r  "$COMMAND"
-  fi
-}
-
-#########################################################################
 # Function telling to the parent process that something happened (e.g. file/binary/script does not exist)
 # Function finds parent process ID (ppid) and set user defined signal (SIGUSR1)
 # In the parent script has to be following line for catching SIGUSR1:
@@ -581,23 +512,4 @@ trap_exit()
     elif [[ $OS_name == "Darwin" ]]; then
         sleep 1;kill -SIGUSR1 `ps $$ -o ppid=`#;exit         # Find parent process ID (ppid) and set user defined signal (SIGUSR1)
     fi
-}
-
-#########################################################################
-# Function which creates dummy_email.txt file
-# USAGE:
-#     create_email <process_name> <list_of_emails>
-#
-# TIP - list of emails should look like: <email1>,<email2>
-#
-# TIP - created email can be then sent by send_email_when_finish.sh script
-#########################################################################
-create_email()
-{
-  # Create the email into dummy txt file
-  touch dummy_email_${1}.txt
-  time_and_date=$(date "+%T on %Y-%m-%d")
-  echo -e "To:${2}" > dummy_email_${1}.txt
-  echo -e "Subject:$(get_subject_ID ./) - ${1} finished at ${time_and_date}" >> dummy_email_${1}.txt
-  echo -e "\nThis email was generated automatically." >> dummy_email_${1}.txt
 }

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Create dummy email, which can be then sent by send_email_when_finish.sh script
+#
+# USAGE:
+#     create_email <process_name> <list_of_emails>
+# EXAMPLE:
+#     create_email flirt <email1>,<email2>
+
+if [[ $# -eq 0 ]] || [[ $1 =~ "-h" ]];then
+    echo "Create dummy email, which can be then sent by send_email_when_finish.sh script."
+    echo -e "\nUSAGE:\n\t${0##*/} <process_name> <list_of_emails>"
+    echo -e "EXAMPLE:\n\t${0##*/} fnirt <email1>,<email2>"
+    exit
+fi
+
+# Write email into .txt file
+touch dummy_email_${1}.txt
+time_and_date=$(date "+%T on %Y-%m-%d")
+echo -e "To:${2}" > dummy_email_${1}.txt
+echo -e "Subject:$(get_subject_ID ./) - ${1} finished at ${time_and_date}" >> dummy_email_${1}.txt
+echo -e "\nThis email was generated automatically." >> dummy_email_${1}.txt
