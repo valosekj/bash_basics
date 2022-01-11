@@ -18,9 +18,17 @@ if [[ $# -eq 0 ]] || [[ $1 =~ "-h" ]];then
     exit
 fi
 
+# If subject ID can be fetched, include it to the email's subject
+subject_id=$(get_subject_ID.py "./")
+if [[ $subject_id == "" ]];then
+    email_subject=""
+else
+    email_subject="${subject_id} - "
+fi
+
 # Write email into .txt file
 touch dummy_email_${1}.txt
 time_and_date=$(date "+%T on %Y-%m-%d")
 echo -e "To:${2}" > dummy_email_${1}.txt
-echo -e "Subject:$(get_subject_ID ./) - ${1} finished at ${time_and_date}" >> dummy_email_${1}.txt
+echo -e "Subject:${email_subject}${1} finished at ${time_and_date}" >> dummy_email_${1}.txt
 echo -e "\nThis email was generated automatically." >> dummy_email_${1}.txt
