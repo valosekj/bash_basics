@@ -51,33 +51,6 @@ Used for manipulation with diffusion-weighted MRI data (dMRI/DWI)
  
  `display_bvecs.m` - matlab function for simple 3D visualisation of gradient vectors based on bvec file
  
- Example dMRI analysis with aforementioned scripts for complete AP acquisition and PA acquisition with b0 only can look like:
- 
- ```
-# Split input AP DWI 4D volume and get _b0 and _dwi files
-separate_b0_and_dwi dwi_AP.nii.gz
-# Fetch total readout time    
-readout_time=$(get_readout dwi_AP.json)
-# Create txt topup config file and merge AP and PA b0 files
-prepare_topup_files dwi_AP_b0.nii.gz dwi_PA.nii.gz "AP-PA" ${readout_time}
-# Run FSL's topup
-topup ...
-
-# Merge original complete AP 4D DWI and PA 4D DWI b0
-fslmerge -t dwi_merged.nii.gz dwi_AP.nii.gz dwi_PA.nii.gz
-# Create .bval and .bvec files for PA b0 DWI
-create_dummy_b0_bval_and_bvec dwi_PA.nii.gz
-# Merge bval and bvec files for AP and PA acquisitions 
-merge_bval_bvec_files dwi_AP.bval dwi_PA.bval
-merge_bval_bvec_files dwi_AP.bvec dwi_PA.bvec
-# Create index.txt file for eddy
-prepare_eddy_file bvals_merged     
-# Run FSL's eddy
-eddy ...
-
-# At this moment, data are ready for diffusion model fitting (dtifit, bedpostx, ...)
- ```
-
 ## Functions for working with MRI data headers:
 
  `parse_dicom_header.sh` - parse dicom header and fetch specific tags (this script requires [AFNI dicom_hdr](https://afni.nimh.nih.gov/pub/dist/doc/program_help/dicom_hdr.html) function)
