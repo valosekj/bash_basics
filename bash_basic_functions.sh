@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export separation_line="-----------------------------------------------------------------------------------------------"
+
 # This script contains some bash functions widely used for analysis
 # Jan Valosek, fMRI laboratory Olomouc, Czech Republic, 2018-2021
 # Thanks to Pavel Hok and Rene Labounek for contribution on some parts of the code

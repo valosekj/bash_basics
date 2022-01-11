@@ -24,6 +24,7 @@ main()
         print_help
     fi
 
+    echo ${separation_line}
     echo -e "Invoked:\t ${0} "$@""
 
     # Global variables

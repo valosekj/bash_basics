@@ -32,6 +32,7 @@ source /usr/local/lib/bash_basics/bash_basic_functions.sh
 # Immediately exit if error
 set -e -o pipefail
 
+echo ${separation_line}
 echo -e "Invoked:\t ${0} "$@""
 
 # Global variables

@@ -22,6 +22,7 @@ if [[ $# -eq 0 ]] || [[ $1 =~ "-h" ]];then
     exit
 fi
 
+echo ${separation_line}
 echo -e "Invoked:\t ${0} "$@""
 
 # Get suffix (bval or bvec)

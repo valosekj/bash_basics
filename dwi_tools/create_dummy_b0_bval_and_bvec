@@ -21,21 +21,27 @@
 # Immediately exit if error
 set -e -o pipefail
 
+# Load some useful functions
+source /usr/local/lib/bash_basics/bash_basic_functions.sh
+
 if [[ $# -eq 0 ]] || [[ $1 =~ "-h" ]];then
     echo "Creaty dummy bval and bvec files with zeros."
     echo "The number of zeros is determined by the number of volumes in input file (4D data required)."
     echo -e "USAGE:\n\t${0##*/} <input 4D diffusion image>"
     echo -e "EXAMPLE:\n\t${0##*/} dmri_PA_only_b0.nii.gz"
+    echo -e "Outputs will be <input 4D diffusion image>.bval and <input 4D diffusion image>.bvec"
     exit
 fi
 
+echo ${separation_line}
 echo -e "Invoked:\t ${0} "$@""
 
 input_file=$1
 
+check_input f "${input_file}"
+
 # Get number of volumes (4th dimension)
 num_of_volumes=$(fslval ${input_file} dim4)
-
 output_bval_filename=$(echo ${input_file%%.*})     # strip out suffix
 zeros=""
 
