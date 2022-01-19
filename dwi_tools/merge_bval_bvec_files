@@ -19,6 +19,7 @@ if [[ $# -eq 0 ]] || [[ $1 =~ "-h" ]];then
     echo -e "USAGE:\n\t${0##*/} <first bval/bvec file> <second bval/bvec file> <full_output_path>"
     echo -e "EXAMPLE:\n\t${0##*/} dti_AP.bval dti_PA.bval /home/valosek/sub-001/dwi/eddy"
     echo -e "\t${0##*/} dti_AP.bvec dti_PA.bvec /home/valosek/sub-001/dwi/eddy"
+    echo -e "Outputs are bvals_merged and bvecs_merged"
     exit
 fi
 
