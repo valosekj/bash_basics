@@ -28,7 +28,7 @@ if [[ $# -eq 0 ]] || [[ $1 =~ "-h" ]];then
     echo -e "Then, the text file will look like:\n\t1 1 1 2 2 2 3 3 3"
     echo -e "NOTE - if two same DWI acquisitions only with opposite PE are acquired, merge bval files first, for example by merge_bval_bvec_files function"
     echo -e "\nUSAGE:\n\t${0##*/} <bval_file> <full_output_path>"
-    echo -e "EXAMPLE:\n\t${0##*/} dti_merged.bval /home/valosek/sub-001/dwi/eddy"
+    echo -e "EXAMPLE:\n\t${0##*/} bvals_merged /home/valosek/sub-001/dwi/eddy"
     exit
 fi
 
