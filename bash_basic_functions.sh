@@ -84,27 +84,38 @@ monitor_condor(){
 }
 
 #########################################################################
-# Function for checking existency of directories or files
+# Function for checking existence of directories or files
 # USAGE:
-#   check_input.sh <argument> "DIR_NAME1" "or FILE_NAME2"
+#   check_input.sh <argument> DIR_NAME(s) or FILE_NAME(s) or SCRIPT_NAME(s)
 # ARGUMENTS:
 #   d - check if directory exists
 #   dc - check if directory exists, if not create it
 #   f - check if file exists
 #   b - check if binary exists (e.g. FSL, ANTS, SCT, Matlab,...)
 #   e - check if script/function exist and is executable
+# EXAMPLES:
+#   check_input.sh d "DIR_NAME1"
+#   check_input.sh dc "DIR_NAME1"
+#   check_input.sh f "FILE_NAME1" "FILE_NAME2"
+#   check_input.sh b matlab
 #########################################################################
 check_input()
 {
 
-  flag="$1"
-  shift
-
   if [[ $flag =~ "h" ]] || [[ $flag == "" ]]; then
-    echo -e "Help for function for checking existency of directories or files.\nUSAGE:\n\tcheck_input <argument> DIR_NAME(s) or FILE_NAME(s) or SCRIPT_NAME(s)"
-    echo -e "ARGUMENTS:\n\td - check if directory exists\n\tdc - check if directory exists, if not create it\n\tf - check if file exists\n\tb - check if binary exists (e.g. FSL, ANTS, SCT, Matlab,...)\n\te - check if script/function exist and is executable"
+    echo -e "Help for function for checking existence of directories or files."
+    echo -e "USAGE:\n\tcheck_input <argument> DIR_NAME(s) or FILE_NAME(s) or SCRIPT_NAME(s)"
+    echo -e "ARGUMENTS:\n\td - check if directory exists\n\tdc - check if directory exists, if not create it"
+    echo -e "\tf - check if file exists\n\tb - check if binary exists (e.g. FSL, ANTS, SCT, Matlab,...)\n\te - check if script/function exist and is executable"
+    echo -e "EXAMPLES:\n\tcheck_input.sh d \"DIR_NAME1\""
+    echo -e "\tcheck_input.sh dc \"DIR_NAME1\""
+    echo -e "\tcheck_input.sh f \"FILE_NAME1\" \"FILE_NAME2\""
+    echo -e "\tcheck_input.sh b matlab"
     return
   fi
+
+  flag="$1"
+  shift
 
   while [[ "$1" != "" ]]; do
     case $flag in
