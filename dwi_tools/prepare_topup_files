@@ -121,5 +121,5 @@ elif [[ ${3} == "PA-AP" ]];then
     fslmerge -t ${output_path}/${b0_merged} ${second_input_file}.nii.gz ${first_input_file}.nii.gz
 fi
 
-echo -e "Created ${output_path}/${b0_merged}."
+echo -e "Created ${output_path}/${b0_merged} with n=$(fslval ${output_path}/${b0_merged} dim4) volumes."
 echo -e "${0##*/} finished\n"
