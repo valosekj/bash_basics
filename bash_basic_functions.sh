@@ -102,7 +102,7 @@ monitor_condor(){
 check_input()
 {
 
-  if [[ $flag =~ "h" ]] || [[ $flag == "" ]]; then
+  if [[ $1 =~ "h" ]] || [[ $1 == "" ]]; then
     echo -e "Help for function for checking existence of directories or files."
     echo -e "USAGE:\n\tcheck_input <argument> DIR_NAME(s) or FILE_NAME(s) or SCRIPT_NAME(s)"
     echo -e "ARGUMENTS:\n\td - check if directory exists\n\tdc - check if directory exists, if not create it"
