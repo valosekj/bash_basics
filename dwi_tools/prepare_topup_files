@@ -115,11 +115,12 @@ echo -e "Created ${output_path}/${output_file_name}:\n$(cat ${output_path}/${out
 #####
 # merge b0 images
 #####
+b0_merged_path="${output_path}/${b0_merged}"
 if [[ ${3} == "AP-PA" ]];then
-    fslmerge -t ${output_path}/${b0_merged} ${first_input_file}.nii.gz ${second_input_file}.nii.gz
+    fslmerge -t ${b0_merged_path} ${first_input_file}.nii.gz ${second_input_file}.nii.gz
 elif [[ ${3} == "PA-AP" ]];then
-    fslmerge -t ${output_path}/${b0_merged} ${second_input_file}.nii.gz ${first_input_file}.nii.gz
+    fslmerge -t ${b0_merged_path} ${second_input_file}.nii.gz ${first_input_file}.nii.gz
 fi
 
-echo -e "Created ${output_path}/${b0_merged} with n=$(fslval ${output_path}/${b0_merged} dim4) volumes."
+echo -e "Created ${b0_merged_path} with n=$(fslval ${b0_merged_path} dim4) volumes."
 echo -e "${0##*/} finished\n"
