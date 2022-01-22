@@ -20,19 +20,21 @@ fi
 declare -A tags_to_keywords
 
 tags_to_keywords=(
-          ["Patient's Name"]="0010 0010"
-          ["Patient ID"]="0010 0020"
-          ["Study Date"]="0008 0020"
-#          ["Study Time"]="0008 0030"
-          ["ID Modality"]="0008 0060"
-          ["Protocol Name"]="0018 1030"
-          ["Pulse Sequence Name"]="0018 9005"
-          ["Sequence Name"]="0018 0024"
-          ["Series Description"]="0008 103e"
-          ["ID Image Type"]="0008 0008"
-          ["Echo Time"]="0018 0081"
-          ["Contrast/Bolus Agent"]="0018 0010"
-          ["Series Number"]="0020 0011"
+          ["Patient's Name"]="0010,0010"
+          ["Patient ID"]="0010,0020"
+          ["Study Date"]="0008,0020"
+#          ["Study Time"]="0008,0030"
+          ["ID Modality"]="0008,0060"
+          ["Protocol Name"]="0018,1030"
+          ["Pulse Sequence Name"]="0018,9005"
+          ["Sequence Name"]="0018,0024"
+          ["Series Description"]="0008,103e"
+          ["ID Image Type"]="0008,0008"
+          ["Repetition Time"]="0018,0080"
+          ["Echo Time"]="0018,0081"
+          ["Effective Echo Time"]="0018,9082"
+          ["Contrast/Bolus Agent"]="0018,0010"
+          ["Series Number"]="0020,0011"
         )
 
 # "${tags_to_keywords[@]}" to expand the values
@@ -41,7 +43,13 @@ tags_to_keywords=(
 # Loop across lines om array
 for keyword in "${!tags_to_keywords[@]}";do
 
-      value=$(dicom_hdr "$dcm" | grep "${tags_to_keywords[$keyword]}" | awk 'NF{ print $NF }' | sed 's:.*\/\/::g')
+      value=$(dcmdump --search "${tags_to_keywords[$keyword]}" "$dcm" | head -1 | awk '{print $3}' | sed 's:\[::g' | sed 's:\]::g')
+      # "${tags_to_keywords[$keyword]}" - dicom tag (e.g. 0008,0020)
+      # head - 1 - keep only the first line (some tags can be presented multiple times)
+      # awk - get the third string
+      # sed - remove "[" and "]" if presented
+
+      #value=$(dicom_hdr "$dcm" | grep "${tags_to_keywords[$keyword]}" | awk 'NF{ print $NF }' | sed 's:.*\/\/::g')
       # awk 'NF{ print $NF }' - get the last column; sed 's:.*\/\/::g' - remove everything before //
       # Format output into two columns
       printf "%-30s" "$keyword"
