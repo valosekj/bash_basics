@@ -49,6 +49,9 @@ for keyword in "${!tags_to_keywords[@]}";do
       # awk - get the third string (i.e. value for certain tag)
       # sed - remove "[" and "]" if presented
 
+      # INFO - AFNI dicom_hdr does not report values for float double tags (e.g. 0018,9082 - EffectiveEchoTime)
+      # see also https://github.com/afni/afni/issues/339
+
       #value=$(dicom_hdr "$dcm" | grep "${tags_to_keywords[$keyword]}" | awk 'NF{ print $NF }' | sed 's:.*\/\/::g')
       # awk 'NF{ print $NF }' - get the last column; sed 's:.*\/\/::g' - remove everything before //
 
