@@ -46,11 +46,12 @@ for keyword in "${!tags_to_keywords[@]}";do
       value=$(dcmdump --search "${tags_to_keywords[$keyword]}" "$dcm" | head -1 | awk '{print $3}' | sed 's:\[::g' | sed 's:\]::g')
       # "${tags_to_keywords[$keyword]}" - dicom tag (e.g. 0008,0020)
       # head - 1 - keep only the first line (some tags can be presented multiple times)
-      # awk - get the third string
+      # awk - get the third string (i.e. value for certain tag)
       # sed - remove "[" and "]" if presented
 
       #value=$(dicom_hdr "$dcm" | grep "${tags_to_keywords[$keyword]}" | awk 'NF{ print $NF }' | sed 's:.*\/\/::g')
       # awk 'NF{ print $NF }' - get the last column; sed 's:.*\/\/::g' - remove everything before //
+
       # Format output into two columns
       printf "%-30s" "$keyword"
       printf "%-20s\n" "$value"
