@@ -35,6 +35,11 @@ tags_to_keywords=(
           ["Effective Echo Time"]="0018,9082"
           ["Contrast/Bolus Agent"]="0018,0010"
           ["Series Number"]="0020,0011"
+          ["Bits Allocated"]="0028,0100"
+          ["Bits Stored"]="0028,0101"
+          ["High Bit"]="0028,0102"
+          ["Smallest Pixel Value"]="0028,0106"
+          ["Largest Pixel Value"]="0028,0107"
         )
 
 # "${tags_to_keywords[@]}" to expand the values
