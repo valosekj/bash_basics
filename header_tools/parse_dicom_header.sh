@@ -40,6 +40,7 @@ tags_to_keywords=(
           ["High Bit"]="0028,0102"
           ["Smallest Pixel Value"]="0028,0106"
           ["Largest Pixel Value"]="0028,0107"
+          ["Dimension"]="0018,0023"
         )
 
 # "${tags_to_keywords[@]}" to expand the values
