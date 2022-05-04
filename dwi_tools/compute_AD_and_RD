@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Compute AD and RD from FSL dtifit output
+
+# USAGE:
+#				compute_AD_and_RD <subject_id> <dtifit_dir_name> <data_basename>
+# EXAMPLE:
+#       compute_AD_and_RD AB-CDE-123 dtifit dtifit
+
+# Jan Valosek, fMRI laboratory Olomouc, Czechia, 2021
+
+# Uncomment for debug
+#set -x
+
+# Immediately exit if error
+set -e -o pipefail
+
+if [[ $# -eq 0 ]] || [[ $1 =~ "-h" ]];then
+		echo "Compute AD and RD from FSL dtifit output."
+		echo -e "USAGE:\n\t${0##*/} <subject_id> <dtifit_dir_name> <data_basename>"
+		echo -e "\nEXAMPLE:\n\t${0##*/} AB-CDE-123 dtifit dtifit"
+		exit
+fi
+
+subject_id=$1					# subject ID (e.g AB-CDE-123)
+dir_name=$2						# name of directory with FSL dtifit output (e.g. dtifit)
+file_basename=$3      # basename of data (e.g. dti_ or dtifit_)
+
+filename=${subject_id}/${dir_name}/${file_basename}
+
+# AD (=L1)
+if [[ ! -f ${filename}_AD.nii.gz ]];then
+	if [[ -f ${filename}_L1.nii.gz ]];then
+			cp ${filename}_L1.nii.gz ${filename}_AD.nii.gz
+			echo "${filename}_AD.nii.gz created"
+	else
+			echo "${filename}_L1.nii.gz does not exist. Cannot create AD."
+	fi
+fi
+
+# RD (=L2+L3/2)
+if [[ ! -f ${filename}_RD.nii.gz ]];then
+	if [[ -f ${filename}_L2.nii.gz ]];then
+			fslmaths ${filename}_L2.nii.gz -add ${filename}_L3.nii.gz -div 2 ${filename}_RD.nii.gz
+			echo "${filename}_RD.nii.gz created"
+	else
+			echo "${filename}_L2.nii.gz does not exist. Cannot create RD."
+	fi
+fi
