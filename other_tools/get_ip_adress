@@ -3,7 +3,7 @@
 # Print hostname and IP address to CLI
 # Jan Valosek, fMRI laboratory Olomouc, 2021
 
-ifconfig_output=$(sudo ifconfig | grep "inet " | awk '{print $2;}')
+ifconfig_output=$(/sbin/ifconfig | grep "inet " | awk '{print $2;}')
 
 echo "Hostname: $(hostname)"
 echo "Ethernet IP address: $(echo "$ifconfig_output" | sed -n 1p)"
