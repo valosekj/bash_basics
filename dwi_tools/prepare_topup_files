@@ -7,7 +7,7 @@
 # See for details:
 #     https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/topup/TopupUsersGuide#A--datain
 
-# Jan Valosek, fMRI laboratory Olomouc, Czechia, 2021
+# Jan Valosek, fMRI laboratory Olomouc, Czechia, 2021-2022
 
 if [[ $# -eq 0 ]] || [[ $1 =~ "-h" ]];then
   echo "Create a config text file and merge b0 images with opposite PE. Outputs can be used for FSL's topup function."
@@ -93,11 +93,12 @@ fi
 # create topup.txt
 #####
 
-# Create empty file
+# Backup txt file if already exists
 if [[ -f ${output_path}/${output_file_name} ]]; then
     mv ${output_path}/${output_file_name} ${output_path}/${output_file_name}.backup
 fi
 
+# Create empty txt file
 touch ${output_path}/${output_file_name}
 
 # Add number of AP rows corresponding to number of volumes in b0 AP file
@@ -113,8 +114,9 @@ done
 echo -e "Created ${output_path}/${output_file_name}:\n$(cat ${output_path}/${output_file_name})"
 
 #####
-# merge b0 images
+# merge b0 images and create nii file
 #####
+# construct path for output nii file
 b0_merged_path="${output_path}/${b0_merged}"
 if [[ ${3} == "AP-PA" ]];then
     fslmerge -t ${b0_merged_path} ${first_input_file}.nii.gz ${second_input_file}.nii.gz
