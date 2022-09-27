@@ -9,7 +9,8 @@
 print_help()
 	{
 	echo -e "Wrapper for convert command for manipulation with images in terminal. Jan Valošek, 2021."
-        echo -e "\nUSAGE:\n\t${0##*/} <OPTION> <IMG_1> <IMG_2> <...>\nEXAMPLE:\n\t${0##*/} heic image1.heic image2.heic"
+        echo -e "\nUSAGE:\n\t${0##*/} <OPTION> <IMG_1> <IMG_2> <...>\nEXAMPLEs:\n\t${0##*/} heic image1.heic image2.heic"
+	echo -e "\t${0##*/} heic *.heic\n\t${0##*/} quality *"
         echo -e "\nOPTIONS:\n\theic - convert heic to jpg\n\tquality - decrease jpg or png quality to 50%"
         exit
 	}
