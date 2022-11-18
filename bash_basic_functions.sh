@@ -88,7 +88,7 @@ monitor_condor(){
 # USAGE:
 #   check_input.sh <argument> DIR_NAME(s) or FILE_NAME(s) or SCRIPT_NAME(s)
 # ARGUMENTS:
-#   d - check if directory exists
+#   d - check if directory exists, if not exit
 #   dc - check if directory exists, if not create it
 #   f - check if file exists
 #   b - check if binary exists (e.g. FSL, ANTS, SCT, Matlab,...)
