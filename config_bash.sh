@@ -5,9 +5,9 @@
 # Run this configuration script from your .bashrc/.zshrc file or within any another script by:
 #     source /usr/local/lib/bash_basics/config_bash.sh
 
-# Jan Valosek, fMRI laboratory, Olomouc, 2019-2022
+# Jan Valosek, fMRI laboratory, Olomouc, 2019-2023
 
-path_to_repo="/usr/local/lib"
+path_to_repo="$HOME/code"
 
 # Load functions
 source ${path_to_repo}/bash_basics/bash_basic_functions.sh
