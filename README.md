@@ -100,6 +100,4 @@ source <path_to_cloned_repo>/bash_basics/config_bash.sh
 
 # Contact: 
 
-Jan Valosek, fMRI laboratory, Olomouc, Czechia
-
-2018-2022
+[Jan Valosek](https://janvalosek.com)
