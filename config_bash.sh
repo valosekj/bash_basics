@@ -13,6 +13,6 @@ path_to_repo="$HOME/code"
 source ${path_to_repo}/bash_basics/bash_basic_functions.sh
 # Add scripts into PATH variable
 export PATH=${PATH}:${path_to_repo}/bash_basics/dwi_tools
+export PATH=${PATH}:${path_to_repo}/bash_basics/nii_tools
 export PATH=${PATH}:${path_to_repo}/bash_basics/header_tools
 export PATH=${PATH}:${path_to_repo}/bash_basics/other_tools
-
