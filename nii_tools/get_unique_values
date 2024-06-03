@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# This is a wrapper script to run a python script that gets unique values from nii file
+
+if [[ $# -ne 1 ]] || [[ $1 =~ "-help" ]];then
+    echo -e "Get unique values in nii file"
+    echo -e "Usage: get_unique_values <nii_file>"
+else
+    python3 /Users/valosek/code/bash_basics/nii_tools/get_unique_values.py $1
+fi
