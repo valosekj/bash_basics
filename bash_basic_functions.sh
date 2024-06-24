@@ -516,11 +516,25 @@ show()
 #########################################################################
 trap_exit()
 {
-    OS_name=$(uname -a | awk '{print $1}')  # get OS name (Darwin or Linux)
+    # Check how the parent script was invoked
+    # S+ means from script
+    # Ss means from command line
+    # Details - https://stackoverflow.com/a/4262107
+    invoked_as=$(ps -o stat= -p $PPID)
 
-    if [[ $OS_name == "Linux" ]]; then
-        sleep 1;kill -SIGUSR1 `ps --pid $$ -o ppid=`#;exit   # Find parent process ID (ppid) and set user defined signal (SIGUSR1)
-    elif [[ $OS_name == "Darwin" ]]; then
-        sleep 1;kill -SIGUSR1 `ps $$ -o ppid=`#;exit         # Find parent process ID (ppid) and set user defined signal (SIGUSR1)
+    # Run from command line -> run simple exit
+    if [[ ${invoked_as} == "Ss" ]];then
+        exit
+    # Run from script -> kill the parent script
+    else
+        return
+
+#        OS_name=$(uname -a | awk '{print $1}')  # get OS name (Darwin or Linux)
+#
+#        if [[ $OS_name == "Linux" ]]; then
+#            sleep 1;kill -SIGUSR1 $(ps --pid $$ -o ppid=) #;exit   # Find parent process ID (ppid) and set user defined signal (SIGUSR1)
+#        elif [[ $OS_name == "Darwin" ]]; then
+#            sleep 1;kill -SIGUSR1 $(ps $$ -o ppid=) #;exit         # Find parent process ID (ppid) and set user defined signal (SIGUSR1)
+#        fi
     fi
 }
