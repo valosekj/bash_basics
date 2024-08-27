@@ -73,17 +73,18 @@ Used for manipulation with diffusion-weighted MRI data (dMRI/DWI)
 ## Clone (download) repo:
 
 ```
+cd ${HOME}/code
 git clone https://github.com/valosekj/bash_basics.git
 ```
 
-Note - I recommend to clone the repo into `/usr/local/lib` directory
+Note: I recommend to clone the repo into `${HOME}/code` directory
 
 ## Usage inside scripts
 
 Include following lines into your script:
 
 ```
-source <path_to_cloned_repo>/bash_basics/config_bash.sh
+source ${HOME}/code/bash_basics/config_bash.sh
 
 export LOGPATH=./log.txt
 exec > >(tee -a $LOGPATH) 2>&1
@@ -94,8 +95,8 @@ exec > >(tee -a $LOGPATH) 2>&1
 You can `source` this repo within your `bashrc`/`zshrc` file to be able to use functions in CLI:
 
 ```
-# Add following lines to your /home/<your_username>/.bashrc or /home/<your_username>/.zshrc file
-source <path_to_cloned_repo>/bash_basics/config_bash.sh
+# Add following lines to your ${HOME}/.bashrc or ${HOME}/.zshrc file
+source ${HOME}/code/bash_basics/config_bash.sh
 ```
 
 # Contact: 
