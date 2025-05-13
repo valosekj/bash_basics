@@ -21,6 +21,7 @@ declare -A tags_to_keywords
 
 tags_to_keywords=(
           ["Patient's Name"]="0010,0010"
+          ["Patient Age"]="0010,1010"
           ["Patient ID"]="0010,0020"
           ["Study Date"]="0008,0020"
 #          ["Study Time"]="0008,0030"
