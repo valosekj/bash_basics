@@ -47,11 +47,20 @@ tags_to_keywords=(
 # "${tags_to_keywords[@]}" to expand the values
 # "${!tags_to_keywords[@]}" (notice the !) to expand the keys
 
-# Loop across lines om array
-for keyword in "${!tags_to_keywords[@]}";do
+# Ordered list of keys
+ordered_keys=(
+  "Patient's Name" "Patient Age" "Patient ID" "Study Date" "ID Modality"
+  "Protocol Name" "Pulse Sequence Name" "Sequence Name" "Series Description"
+  "ID Image Type" "Repetition Time" "Echo Time" "Effective Echo Time"
+  "Contrast/Bolus Agent" "Series Number" "Bits Allocated" "Bits Stored"
+  "High Bit" "Smallest Pixel Value" "Largest Pixel Value" "Dimension"
+)
 
-      value=$(dcmdump --search "${tags_to_keywords[$keyword]}" "$dcm" | head -1 | awk '{print $3}' | sed 's:\[::g' | sed 's:\]::g')
-      # "${tags_to_keywords[$keyword]}" - dicom tag (e.g. 0008,0020)
+# Loop across lines om array
+for keyword in "${ordered_keys[@]}";do
+      tag="${tags_to_keywords[$keyword]}"
+      value=$(dcmdump --search "$tag" "$dcm" | head -1 | awk '{print $3}' | sed 's:\[::g' | sed 's:\]::g')
+      # "$tag" - dicom tag (e.g. 0008,0020)
       # head - 1 - keep only the first line (some tags can be presented multiple times)
       # awk - get the third string (i.e. value for certain tag)
       # sed - remove "[" and "]" if presented
