@@ -1,4 +1,21 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Parse DICOM header and fetch specific tags
+# This block re-executes the script with the proper bash if running on macOS
+# (Homebrew’s Bash) so that associative arrays work.
+
+if [[ "$(uname)" == "Darwin" ]]; then
+    # macOS
+    HOMEBREW_BASH="/opt/homebrew/bin/bash"
+    # For Intel Macs fallback if Apple Silicon path doesn't exist
+    [[ -x "$HOMEBREW_BASH" ]] || HOMEBREW_BASH="/usr/local/bin/bash"
+    # Re-exec only if we’re not already running under Homebrew’s bash
+    if [[ "$BASH" != "$HOMEBREW_BASH" && -x "$HOMEBREW_BASH" ]]; then
+        exec "$HOMEBREW_BASH" "$0" "$@"
+    fi
+else
+    # Other Unix / Linux – assume system bash is ≥4
+    :
+fi
 
 # Parse dicom header and fetch specific tags
 # USAGE:
@@ -16,10 +33,7 @@ else
     dcm=${1}
 fi
 
-# declare bash array (https://stackoverflow.com/a/3467959)
-declare -A tags_to_keywords
-
-tags_to_keywords=(
+declare -A tags_to_keywords=(
           ["Patient's Name"]="0010,0010"
           ["Patient Age"]="0010,1010"
           ["Patient ID"]="0010,0020"
