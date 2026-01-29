@@ -41,6 +41,9 @@ declare -A tags_to_keywords=(
 #          ["Study Time"]="0008,0030"
           ["ID Modality"]="0008,0060"
           ["Protocol Name"]="0018,1030"
+          ["Manufacturer"]="0008,0070"
+          ["ManufacturerModelName"]="0008,1090"
+          ["MagneticFieldStrength"]="0018,0087"
           ["Pulse Sequence Name"]="0018,9005"
           ["Sequence Name"]="0018,0024"
           ["Series Description"]="0008,103e"
@@ -64,6 +67,7 @@ declare -A tags_to_keywords=(
 # Ordered list of keys
 ordered_keys=(
   "Patient's Name" "Patient Age" "Patient ID" "Study Date" "ID Modality"
+  "Manufacturer" "ManufacturerModelName" "MagneticFieldStrength"
   "Protocol Name" "Pulse Sequence Name" "Sequence Name" "Series Description"
   "ID Image Type" "Repetition Time" "Echo Time" "Effective Echo Time"
   "Contrast/Bolus Agent" "Series Number" "Bits Allocated" "Bits Stored"
