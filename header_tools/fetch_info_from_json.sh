@@ -16,4 +16,4 @@ fi
 
 grep "SeriesDescription" ${fname}
 grep "ProtocolName" ${fname}
-
+grep "BidsGuess" ${fname}
