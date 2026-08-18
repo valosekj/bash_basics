@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# This is a wrapper script to run a python script that gets center of mass (COM) for each lesion in a nii lesion mask
+
+if [[ $# -ne 1 ]] || [[ $1 =~ "-help" ]];then
+    echo -e "Get center of mass (COM) for each lesion in a nii lesion mask"
+    echo -e "Usage: get_lesion_com <lesion_seg_nii_file>"
+else
+    python3 ${HOME}/code/bash_basics/nii_tools/get_lesion_com.py $1
+fi
