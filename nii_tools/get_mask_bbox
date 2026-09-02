@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# This is a wrapper script to run a python script that gets min/max voxel indices (bounding box) for a binary mask
+
+if [[ $# -ne 1 ]] || [[ $1 =~ "-help" ]];then
+    echo -e "Get min/max voxel indices (bounding box) for a binary mask, for x, y, z dimensions"
+    echo -e "Usage: get_mask_bbox <mask_nii_file>"
+else
+    python3 ${HOME}/code/bash_basics/nii_tools/get_mask_bbox.py $1
+fi
